@@ -1,0 +1,13 @@
+	<div>
+
+		<div ng-include src="'/partial/search-bar.html'"> </div>
+		<ul class="artists">
+	  			<li ng-repeat="artist in artists">
+	  				
+	  				<a ng-href="{{artist.url[0]}}" >{{artist.name}}</a>
+	  				
+	  				<div ng-model="artist.profile">
+	  				</div>	  				
+	  			</li>
+	  		</ul>
+	  		</div>
