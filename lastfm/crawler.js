@@ -14,22 +14,12 @@ var url = "http://ws.audioscrobbler.com/2.0/";
 
 // app.use(bodyParser.json()); // for parsing application/json
 // app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(morgan('combined'));
 app.use(express.static("public"));
+app.use(morgan('combined'));
 
 //Adding libs
 app.use("/lib", express.static("node_modules/"));
 app.use("/css", express.static("node_modules/"));
-
-
-
-
-
-
-
-
-
-
 
 app.get("/lastfm", function (req, res) {
 	var params = req.query;
@@ -37,21 +27,23 @@ app.get("/lastfm", function (req, res) {
 		console.log(k + " value " + params[k]);
 	}
 	params.api_key = api_key;
+	params.format = 'json';
 	request({uri: "", baseUrl: url, qs: params, json:true}, function(err, result, body) {
 		if (err) {			
 			console.log(err);
 			res.status(result).send(body);
 			return ;
 		}
-		xml = body;
-		console.log(xml);
-		parseString(xml, function(err, result) {
-			if (err) {
-				console.log(err);
-				res.status(500).send(err);
-			}
-			else res.json(result);
-		})
+		// xml = body;
+		// console.log(xml);
+		// parseString(xml, function(err, result) {
+		// 	if (err) {
+		// 		console.log(err);
+		// 		res.status(500).send(err);
+		// 	}
+		// 	else res.json(result);
+		// })
+		res.json(body);
 	});
 });
 

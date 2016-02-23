@@ -4,28 +4,19 @@ app.factory('Artists', ['$resource', function($resource) {
 return $resource('/lastfm', null,
     {
     	'query': {method: 'GET', params:{method:'artist.search'}},
-    	'get':{method:'GET', params:{method:'artist.getInfo'}},
-    	'getTracks':{
-    		method:'GET', params:
-    		{method:'artist.getTopTracks', limit:12}
-    	},
-    	'getAlbums':{
-    		method:'GET', params:
-    		{method:'artist.getTopAlbums', limit:12}
-    	}
+    	'get':{method:'GET', params:{method:'artist.getInfo'}}
     });
 }]);
 
-
-app.controller('ArtistCtrl', function($scope, $state, Artists){
+app.controller('ArtistCtrl', function($scope, Artists){
 	$scope.query = "jack";
 	$scope.artists = [];
 	
-	$scope.search = function(name) {		
-		Artists.query({artist:name}, function(res){
-			console.log(res);
-			if (res.error == null) {
-				var artistMatches = res.results.artistmatches.artist;
+	$scope.search = function(name) {
+		Artists.query({artist:name}, function(result){
+			console.log(result);
+			if (result.lfm.$.status === "ok") {
+				var artistMatches = result.lfm.results[0].artistmatches[0].artist;
 				$scope.artists = artistMatches;
 				console.log($scope.artists[0]);
 			}
@@ -33,7 +24,12 @@ app.controller('ArtistCtrl', function($scope, $state, Artists){
 	}
 
 	$scope.detail = function(artist) {
-		$state.transitionTo("detail-artist", {mbid:artist.mbid});		
+		Artists.get({mbid: artist.mbid[0]}, function(result){
+			console.log(result)
+			if (result.lfm.$.status === "ok") {
+				
+			}
+		});
 	}
 });
 

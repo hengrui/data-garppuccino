@@ -1,0 +1,111 @@
+
+<div class="container">
+
+	<div class="artist row">
+		<div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+		        <h4 class="panel-title">
+		          {{artist.name}}
+		          id: {{artist.mbid}}
+		        </h4>
+		      </div>
+		    <div class="panel-body">
+		    	listeners: {{artist.stats.listeners}}
+		    	playcount: {{artist.stats.playcount}}
+		    </div>
+		    <div class="panel-footer">
+		    	<span ng-repeat="tag in artist.tags.tag">
+		    		<a href="{{tag.url}}">{{tag.name}}
+		    		</a>
+		    	</span>
+		    </div>
+		</div>
+			<div class="panel panel-default">
+		      <div class="panel-heading">
+		        <h4 class="panel-title">
+		          <button class="btn btn-link" 
+		          data-toggle="collapse" data-target="#collapse-bio">
+		          Bio</button>
+		        </h4>
+		      </div>
+		      <div id="collapse-bio" class="panel-collapse">
+		        <div class="panel-body">
+		        <p>
+				{{artist.bio.summary}}
+				</p>
+				</div>
+		        <div class="panel-footer">Panel Footer</div>
+		      </div>
+		    </div>
+			
+		</div>
+		<!-- End bio -->
+  	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<button class="btn btn-link" style="width:100%;"
+			data-toggle="collapse" data-target="#collapse-tracks">
+			          Top Tracks</button>
+		</div>
+		<div id="collapse-tracks" class="panel-collapse collapse">
+			<div class="panel-body ">
+			  	<div class="row">
+			  		<div ng-repeat="track in artist.tracks">
+			  			<div class="col-md-4 col-sm-6">
+			  				<div class="panel panel-danger">
+			  					<div class="panel-heading">
+			  						<a href="{{track.url}}">{{track.name}}</a>
+			  					</div>
+			  					<div class="panel-body">
+			  						<div class="col-xs-6">
+			  						listeners: {{track.listeners}}
+			  						playcount: {{track.playcount}}
+			  						</div>
+			  						<div class="col-xs-6">
+			  							<img ng-src="{{track.image[1]['#text']}}" />
+			  						</div>
+			  					</div>
+			  				</div>
+			  			</div>
+			  		</div>
+			  	</div>
+		  	</div>
+	  	</div>
+	</div> 
+	<!-- End top tracks -->
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<button class="btn btn-link" style="width:100%;"
+			data-toggle="collapse" data-target="#collapse-albums">
+			          Top Albums</button>
+		</div>
+		<div id="collapse-albums" class="panel-collapse collapse">
+			<div class="panel-body ">
+			  	<div class="row">
+			  		<div ng-repeat="album in artist.albums">
+			  			<div class="col-md-4 col-sm-6">
+			  				<div class="panel panel-danger">
+			  					<div class="panel-heading">
+			  						<a href="{{album.url}}">{{album.name}}</a>
+			  					</div>
+			  					<div class="panel-body">
+			  						<div class="col-xs-6">
+			  						playcount: {{album.playcount}}
+			  						</div>
+			  						<div class="col-xs-6">
+			  							<img ng-src="{{album.image[1]['#text']}}" />
+			  						</div>
+			  					</div>
+			  				</div>
+			  			</div>
+			  		</div>
+			  	</div>
+		  	</div>
+	  	</div>
+	</div> 
+
+</div>
+<!-- End div -->
