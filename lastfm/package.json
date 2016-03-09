@@ -4,7 +4,8 @@
   "description": "",
   "main": "crawler.js",
   "scripts": {
-    "test": "nodejs server/test_search.js"
+    "test": "nodejs server/test_search.js",
+    "lastfm": "nodejs crawler/crawler.js"
   },
   "author": "Hengrui CAO",
   "license": "NONE",
@@ -15,6 +16,7 @@
     "express": "^4.13.4",
     "morgan": "^1.7.0",
     "pg": "^4.5.1",
+    "priorityqueuejs": "^1.0.0",
     "request": "^2.69.0",
     "squel": "^4.3.3",
     "underscore": "^1.8.3",
