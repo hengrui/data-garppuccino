@@ -1,13 +1,14 @@
 var name = require("./names.js");
-var fmapi = require("./lastfm.js");
-var utils = require("./utils/utils.js");
-var db = require("./database/all.js");
+var fmapi = require("./lastfm");
+var utils = require("./utils");
+var db = require("./database");
+var crawler = require("./core");
 
 var data = new name.Data();
 
 // start request every second interval
 var interval = 400;
-
+var interval_handle;
 // start with 1 to omit the title
 var findex = 1;
 var lindex = 1;
@@ -27,47 +28,44 @@ var priorities = {
 
 // Main entry for crawling, callback every interval
 var crawl = function(){
-	if (!tasks.empty()){
-		var task = tasks.dequeue();
-		//do some staff;
-		console.log(task);
-		if (task.artist) {
-			console.log(task.artist);
-			// var obj = db.Artist.value(task.artist);
-			// obj.id = task.artist.mbid;
-			// db.Artist.insert({values: obj}, function(res, err){
-			// 	err && console.error(err);
-			// });
-		}
-
-	} else {
+	// if (!tasks.empty()){
+	// 	var task = tasks.dequeue();
+	// 	//do some staff;
+	// 	console.log(task);
+	// 	if (task.artist) {
+	// 		console.log(task.artist);
+	// 		// var obj = db.Artist.value(task.artist);
+	// 		// obj.id = task.artist.mbid;
+	// 		// db.Artist.insert({values: obj}, function(res, err){
+	// 		// 	err && console.error(err);
+	// 		// });
+	// 	}
+	// } else 
+	{
 		if (findex < data.firstnames.length) {
 			var name = data.firstnames[findex][0];
-			fmapi.SearchArtist({name: name},
-				function(result, err) {
-					if (!err){
-						var artists = result
-							.results.artistmatches.artist;
-
-						var conv = [];
-						utils._.each(artists, function(elem) {
-							var artist = db.Artist.value(elem);
-							artist.id = elem.mbid;
-							conv.push(artist);
-							tasks.enqueue(
-								{priority: priorities.artist,
-								artist: artist});
-						});
-						db.Artist.insert({values: conv}, function(res, err){
-							err && console.error(err);
-						});
-					}
+			
+			crawler.Artist.search({name: name}, function(artists, n) {
+				utils._.each(artists, function(artist) {
+					crawler.Artist.tracks(artist, function(tracks, n){
+						tracks[0] && console.log(tracks[0]);
+						n();//get more tracks
+					});
+					crawler.Artist.detail(artist);
 				});
+				n();
+			});
 			++findex;
 		} else
-		clearInterval(interval_handle);
+		interval_handle && clearInterval(interval_handle);
 	}
 }
 
-crawl();
-var interval_handle = setInterval(crawl, interval);
+
+function launch() {
+	crawl();
+	interval_handle = setInterval(crawl, interval);	
+}
+
+launch()
+

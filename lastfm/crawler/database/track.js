@@ -2,28 +2,28 @@ var db = require("./db.js");
 var squel = require("../squel");
 var util = require("underscore");
 
-var Artist = module.exports = {};
+var Track = module.exports = {};
 
-var attributes = Artist.attributes =
+Track.attributes =
 	{
-	"id":[] ,
 	"name":[],
-	"lastname":[],
-	"firstname":[],
+	"id":[],
 	"listeners":[db.Int],
 	"playcount":[db.Int],
-	"bio" : [db.Json],
-	"tags": [db.Json]
+	"tags":[db.Json],
+	"raw":[db.Json],
+	"artist_id":[],
+	"artist_name":[],
 	}
 
-Artist.value = function(obj){
-	return db.value(obj, attributes);
+Track.value = function(obj){
+	return db.value(obj, Track.attributes);
 }
 
-var table = Artist.table = "lastfm_artist";
+var table = "lastfm_track";
 
-Artist.insert = function(params, c){
-	var q = squel.insert();
+Track.insert = function(params, c){
+    var q = squel.insert();
 	var values = [].concat(params.values);
 	var fields = util._.keys(values[0]);
     q.into(table)
@@ -34,33 +34,22 @@ Artist.insert = function(params, c){
         	.where("v.name not in ?", squel.select().field('name').from(table))
         )
         .returning("*");
-
+    // console.log(quel.values().setFieldsRows(values).toString());
+    // console.log(q.toString());
     db.query(q.toString(), c);
+
 };
 
 //offset
 //limit
-Artist.get = function(params, c){
+Track.get = function(params, c){
 	var q = squel.select();
     q.from(table);
     params.offset && q.offset(params.offset);
     params.limit && q.offset(params.limit);
 
-    for (var k in (params.where || [])) {
+    for (var k in (params.where || {})) {
 		q.where(k + " = ?", params.where[k]);
 	}
     db.query(q.toString(), c);
-}
-
-Artist.update = function(params, c){
-	var q = squel.update().table(table);
-
-	for (var k in (params.values || {})) {
-		q.set(k, params.values[k]);
-	}
-
-	for (var k in (params.where || {})) {
-		q.where(k + " = ?", params.where[k]);
-	}
-	db.query(q.toString(), c);
 }

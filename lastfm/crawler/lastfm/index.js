@@ -13,9 +13,9 @@ _.Request = function (params, callBack) {
 	request({uri: "", baseUrl: url, qs: params, json:true},
 		function(err, result, body) {
 		if (err) {		
-			console.log(err);			
+			console.error(err);			
 		}
-		callBack(body, err);
+		callBack && callBack(body, err);
 	});
 };
 
@@ -29,22 +29,33 @@ _.SearchArtist = function(params, callBack) {
 
 	params.artist = name;
 	params = underscore.pick(params, 'artist', 'page', 'limit');
+	params = underscore.defaults(params, {page: 1, limit: 100});
 	params.method = "artist.search";
 	_.Request(params, callBack);
 };
 
+// params: {id:}
+_.GetArtistInfo = function(params, callBack) {
+	var obj = underscore.pick(params, 'artist');
+	params.id && (obj.mbid = params.id);
+	obj.method = "artist.getInfo";
+	_.Request(obj, callBack);
+};
+
 // params: {id: }
 _.GetArtistTracks = function(params, callBack) {
-	var obj = underscore.pick(params, 'page', 'limit');
-	obj.mbid = params.id;
+	params = underscore.defaults(params, {page: 1, limit: 100});
+	var obj = underscore.pick(params, 'artist', 'page', 'limit');
+	params.id && (obj.mbid = params.id);
 	obj.method = "artist.getTopTracks";	
 	_.Request(obj, callBack);
 };
 
 // params: {id: }
 _.GetArtistAlbums = function(params, callBack) {
-	var obj = underscore.pick(params, 'page', 'limit');
-	obj.mbid = params.id;
+	params = underscore.defaults(params, {page: 1, limit: 100});
+	var obj = underscore.pick(params, 'artist', 'page', 'limit');
+	params.id && (obj.mbid = params.id);
 	obj.method = "artist.getTopAlbums";	
 	_.Request(obj, callBack);
 };
