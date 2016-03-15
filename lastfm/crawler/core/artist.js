@@ -57,6 +57,39 @@ var detail = Artist.detail = function(param, callBack) {
 	})
 };
 
+var getAlbums = Artist.albums = function(param, callBack) {
+	param = utils._.defaults(param, {page: 1});
+	param = utils._.extend(param, {artist: param.name, id:param.id});
+	fmapi.GetArtistAlbums(param,
+		function(result, err) {
+			if (!err && result.topalbums){
+				var elems = result.topalbums.album;
+				var pagecount = result.topalbums["@attr"].totalPages;
+
+				var next = function() {
+					if (param.page < pagecount) {
+						param.page += 1;
+						getAlbums(param, callBack);
+					}
+				}
+				if (elems.length > 0) {
+					var conv = [];
+					utils._.each(elems, function(elem){
+						elem.id = elem.mbid || '';
+						elem.artist_name = param.artist;
+						elem.artist_id = param.id || '';
+						conv.push(db.Album.value(elem));
+					});
+					db.Album.insert({values: conv}, function(res, err){
+						!err && callBack && callBack(res.rows, next);
+						err && console.error(err);
+					});
+					callBack || next();
+				}
+			}
+	})
+}
+
 var getTracks = Artist.tracks = function(param, callBack) {
 	param = utils._.defaults(param, {page: 1});
 	param = utils._.extend(param, {artist: param.name, id:param.id});
@@ -78,6 +111,8 @@ var getTracks = Artist.tracks = function(param, callBack) {
 					var conv = [];
 					utils._.each(tracks, function(elem){
 						elem.id = elem.mbid || '';
+						elem.artist_name = param.artist;
+						elem.artist_id = param.id || '';
 						conv.push(db.Track.value(elem));
 					});
 					db.Track.insert({values: conv}, function(res, err){

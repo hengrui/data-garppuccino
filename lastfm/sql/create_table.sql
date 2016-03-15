@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS lastfm_album(
 	-- just put raw for now, unknown data..
 	raw json,
 	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name)
+	PRIMARY KEY(name, artist_name)
 );
 
 CREATE TABLE IF NOT EXISTS lastfm_track(
@@ -44,5 +44,12 @@ CREATE TABLE IF NOT EXISTS lastfm_track(
 	-- just put raw for now, unknown data..
 	raw json,
 	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name)
+	PRIMARY KEY(name, artist_name)
 );
+
+CREATE TABLE IF NOT EXISTS lasftfm_album_tracks(
+	album varchar(512),
+	artist varchar(512),
+	track varchar(512),
+	PRIMARY KEY(album, artist, track)
+)

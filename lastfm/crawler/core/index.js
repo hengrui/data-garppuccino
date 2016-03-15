@@ -1,3 +1,5 @@
 var _ = module.exports = {
-	Artist: require("./artist.js")
+	Artist: require("./artist.js"),
+	Album: require("./album.js"),
+	Track: require("./track.js")
 }
