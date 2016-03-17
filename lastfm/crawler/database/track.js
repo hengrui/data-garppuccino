@@ -10,6 +10,7 @@ Track.attributes =
 	"id":[],
 	"listeners":[db.Int],
 	"playcount":[db.Int],
+    "duration":[db.Int],
 	"tags":[db.Json],
 	"raw":[db.Json],
 	"artist_id":[],
@@ -31,14 +32,25 @@ Track.insert = function(params, c){
         	squel.select().from(
         		squel.values().setFieldsRows(values),
         		"v(" + fields.join(",") + ")")
-        	.where("v.name not in ?", squel.select().field('name').from(table))
+                .where("not exists ?", squel.select().from(table, 'y'
+                    ).where("y.name = v.name AND y.artist_name = v.artist_name"))
         )
         .returning("*");
-    // console.log(quel.values().setFieldsRows(values).toString());
-    // console.log(q.toString());
     db.query(q.toString(), c);
-
 };
+
+Track.update = function(params, c){
+    var q = squel.update().table(table);
+
+    for (var k in (params.values || {})) {
+        q.set(k, params.values[k]);
+    }
+
+    for (var k in (params.where || {})) {
+        q.where(k + " = ?", params.where[k]);
+    }
+    db.query(q.toString(), c);
+}
 
 //offset
 //limit

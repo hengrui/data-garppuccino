@@ -1,0 +1,1 @@
+select count(*), 'artists' from lastfm_artist union select count(*), 'albums' from lastfm_album union select count(*), 'tracks' from lastfm_track;

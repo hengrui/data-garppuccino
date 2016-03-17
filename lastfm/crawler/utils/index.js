@@ -38,10 +38,13 @@ _.PriorityQueue = function(params) {
 	this.empty = function() {
 		return this._.size() == 0;
 	}
+  this.size = function() {
+    return this._.size();
+  }
 	this.dequeue = function() {
 		return this._.deq();
 	}
-	this.enqueue = function(elem) {
+	this.push = this.enqueue = function(elem) {
 		return this._.enq(elem)
 	}
 }

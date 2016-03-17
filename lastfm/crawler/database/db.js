@@ -18,6 +18,10 @@ var _ = module.exports = {};
 
 _.query = function(queryStr, resultCallBack) {
 	pg.connect(config, function(err, client, done) {
+        if (err) {
+            console.error(err);
+            return ;
+        }
         client.query(queryStr, function(err, result) {
 			if (err) {
 				console.error(JSON.stringify({query: queryStr, error: err}));
@@ -32,7 +36,7 @@ _.Int = function(val) {
     if (typeof val === 'string' && val != null) {
         return parseInt(val);
     }
-    return val;
+    return 0;
 }
 
 _.Json = function(val) {

@@ -5,3 +5,4 @@
 DROP TABLE lastfm_artist;
 DROP TABLE lastfm_album;
 DROP TABLE lastfm_track;
+DROP TABLE lastfm_album_tracks;

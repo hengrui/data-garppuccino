@@ -64,12 +64,12 @@ _.GetAlbumInfo = function(params, c) {
 	var obj = underscore.pick(params, 'artist', 'album');
 	params.id && (obj.mbid = params.id);
 	obj.method = "album.getInfo";
-	_.Request(obj, callBack);
+	_.Request(obj, c);
 }
 
 _.GetTrackInfo = function(params, c) {
 	var obj = underscore.pick(params, 'artist', 'track');
 	params.id && (obj.mbid = params.id);
 	obj.method = "track.getInfo";
-	_.Request(obj, callBack);
+	_.Request(obj, c);
 }

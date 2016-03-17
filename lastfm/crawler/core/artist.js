@@ -17,7 +17,7 @@ var search = Artist.search = function(params, callBack) {
 					.results.artistmatches.artist;
 
 				if (artists.length < 1)
-					return ;
+					return (callBack && callBack());
 
 				var next = function() {
 					if (count + startIndex < totalCount) {
@@ -32,7 +32,8 @@ var search = Artist.search = function(params, callBack) {
 					conv.push(db.Artist.value(elem));
 				});
 				db.Artist.insert({values: conv}, function(res, err){
-					!err && callBack && callBack(res.rows, next);
+					!err && callBack && callBack(res.rows,
+						(startIndex + count < totalCount) ? next : null);
 					err && console.error(err);
 				});
 				callBack || next();

@@ -4,15 +4,15 @@
 CREATE TABLE IF NOT EXISTS lastfm_artist(
 	-- artist_id for original id in last fm
 	id varchar(128),
-	name varchar(256), 
+	name varchar(512), 
 	lastname varchar(256),
 	firstname varchar(256),
 	listeners int,
 	playcount int,
-	bio json,
-	tags json,
-	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name)
+	bio text,
+	tags text,
+	update_on timestamp DEFAULT NOW()
+	-- PRIMARY KEY(name)
 );
 
 CREATE TABLE IF NOT EXISTS lastfm_album(
@@ -21,14 +21,14 @@ CREATE TABLE IF NOT EXISTS lastfm_album(
 	name varchar(512),
 	listeners int,
 	playcount int,
-	tags json,
+	tags text,
 	artist_id varchar(128),
 	artist_name varchar(512),
 	-- release date
 	-- just put raw for now, unknown data..
-	raw json,
-	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name, artist_name)
+	raw text,
+	update_on timestamp DEFAULT NOW()
+	-- PRIMARY KEY(name, artist_name)
 );
 
 CREATE TABLE IF NOT EXISTS lastfm_track(
@@ -37,19 +37,19 @@ CREATE TABLE IF NOT EXISTS lastfm_track(
 	name varchar(512),
 	listeners int,
 	playcount int,
-	tags json,
+	tags text,
 	artist_id varchar(128),
 	artist_name varchar(512),
 	duration int,
 	-- just put raw for now, unknown data..
-	raw json,
-	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name, artist_name)
+	raw text,
+	update_on timestamp DEFAULT NOW()
+	-- PRIMARY KEY(name, artist_name)
 );
 
-CREATE TABLE IF NOT EXISTS lasftfm_album_tracks(
+CREATE TABLE IF NOT EXISTS lastfm_album_tracks(
 	album varchar(512),
 	artist varchar(512),
-	track varchar(512),
-	PRIMARY KEY(album, artist, track)
+	track varchar(512)
+	-- PRIMARY KEY(album, artist, track)
 )

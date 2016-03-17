@@ -31,7 +31,7 @@ Artist.insert = function(params, c){
         	squel.select().from(
         		squel.values().setFieldsRows(values),
         		"v(" + fields.join(",") + ")")
-        	.where("v.name not in ?", squel.select().field('name').from(table))
+        	.where("v.name not in ?", squel.select().field('g.name').from(table, 'g'))
         )
         .returning("*");
 
