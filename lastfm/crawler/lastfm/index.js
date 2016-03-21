@@ -7,15 +7,18 @@ var _ = module.exports = {};
 var api_key = process.env.API_KEY || 'ad3f3423cdfb09e3e374c7ccf2c6c347';
 var url = "http://ws.audioscrobbler.com/2.0/";
 
+_.requestCount = 0;
 _.Request = function (params, callBack) {
 	params.api_key = api_key;
 	params.format = 'json';
+	++_.requestCount;
 	request({uri: "", baseUrl: url, qs: params, json:true},
 		function(err, result, body) {
 		if (err) {		
-			console.error(err);			
+			console.error(err);
 		}
 		callBack && callBack(body, err);
+		--_.requestCount;
 	});
 };
 

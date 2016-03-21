@@ -44,7 +44,7 @@ Artist.get = function(params, c){
 	var q = squel.select();
     q.from(table);
     params.offset && q.offset(params.offset);
-    params.limit && q.offset(params.limit);
+    params.limit && q.limit(params.limit);
 
     for (var k in (params.where || [])) {
 		q.where(k + " = ?", params.where[k]);

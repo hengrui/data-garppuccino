@@ -14,16 +14,17 @@ csv_path[1] = prefixes + csv_path[1];
 
 var _ = module.exports = {};
 
-_.Data = function(){
+_.Data = function(c){
 	this.firstnames = [];
 	this.lastnames = [];
 
 	var root = this;
-	fs.createReadStream(csv_path[0]).pipe(
+	var st = fs.createReadStream(csv_path[0]).pipe(
 		parse({}, function(err, data){
 			root.firstnames = data;
-		})
-		);
+			c && c();
+		}));
+	//c && st.on('finish', c);
 	// fs.createReadStream(__dirname+csv_path[0]).pipe(
 	// 	parse({}, function(err, data){
 	// 		console.log(data);

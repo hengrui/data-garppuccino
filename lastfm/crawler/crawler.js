@@ -4,33 +4,14 @@ var utils = require("./utils");
 var db = require("./database");
 var crawler = require("./core");
 
-var data = new name.Data();
+var limit = 100;
 
-// start request every second interval
-var interval = 100;
-var interval_handle;
-// start with 1 to omit the title
-var findex = 1000;
+var findex = 7;
 var lindex = 1;
-
-	
-var tasks = new utils.PriorityQueue({comparator: function(a, b){
-	return a.priority - b.priority;
-}});
-
-// define priorities of retrieving order
-// current: get artists->get albums->get tracks
-var priorities = {
-	artist: 1,
-	albums: 2,
-	tracks: 3
-}
-
-var d = 0, limit = 10;
-
-var ntr = 3000;
+var ntr = 4279;
 var crawlTrack = function() {
-	db.Album.getTrackRelations({limit: 100, offset: ntr}, function(res, error) {
+	db.Album.getTrackRelations({limit: limit, offset: ntr},
+		function(res, error) {
 		var tracks = res.rows;
 		//console.log(tracks);
 		utils._.each(tracks, function(track) {
@@ -38,66 +19,64 @@ var crawlTrack = function() {
 				name: track.track});
 		});
 		ntr += tracks.length;
-		crawlTrack();
+		if (tracks.length == limit) {
+			crawlTrack();		
+		} else {
+			setTimeout(crawlTrack, 1000);
+		}
+		//console.log('crawlTrack: ' + ntr);
 	});
 }
 
-var mainCrawl = function() {
-	if (!tasks.empty()) {
-		t = tasks.dequeue();
-		t.fun();
-	}
-	else if (findex < data.firstnames.length) {
-		if (d > limit)
-			return ;
-		++d;
-
-		var name = data.firstnames[findex][0];
-		console.log("-> crawl: " + name);
-		++findex;
-
-		crawler.Artist.search({name: name},
-			function(artists, n) {
-			artists && 
-			tasks.push({priority: 1, fun: function() {
-			utils._.each(artists, function(artist) {
-				// crawl album of artist
-				crawler.Artist.albums(artist, function(albums, n){
+var nal = 2482;
+var crawlAlbum = function() {
+	db.Artist.get({limit: limit, offset: nal}, function(res, error) {
+		var artists = res.rows;
+		utils._.each(artists, function(artist) {
+			crawler.Artist.albums(artist, function(albums, n){
 						utils._.each(albums, function(album) {
-							// tasks.push({priority: 2, fun: function() {
 								crawler.Album.detail(album, function(album, tracks) {
-									// utils._.each(tracks, function(track) {
-									// 	crawler.Track.detail({artist: track.artist,
-									// 		name: track.track});
-									// });
-								});								
-							// }});
-							//retrieve detail of album
+								});
 						});
-						n && tasks.push({priority: 1, fun: n});
+						n && n();
 					});
-					crawler.Artist.detail(artist);
-				});
-			--d;
-			}});
-			//n && tasks.push({priority: 0, fun: n});
+			crawler.Artist.detail(artist);
 		});
+		nal += artists.length;
+		if (artists.length == limit) {
+			crawlAlbum();		
+		} else {
+			setTimeout(crawlAlbum, 1000);
+		}
+	});
+}
+
+var crawlArtist = function(){
+	if (findex < data.firstnames.length) {
+		var name = data.firstnames[findex][0];
+		crawler.Artist.search({name: name, limit:1000}, function(artists, n) {
+			console.log('crawlArtist: ' + findex);
+			if (!n) {			
+				++findex;
+				crawlArtist();
+			}
+			n && n();
+		});
+	} else {
+		console.log('Artist crawl finished ' + findex);
 	}
-	else
-	  interval_handle && clearInterval(interval_handle);	
 }
 
-// Main entry for crawling, callback every interval
+var report = function(){
+	console.log('Artist ' + findex + '; Album ' + nal + '; Track' + ntr + '; Requests:' + fmapi.requestCount);
+}
+
 var crawl = function(){
+	crawlArtist();
 	crawlTrack();
-	//mainCrawl();
-	// return true;
+	crawlAlbum();
+	setInterval(report, 1000);
 }
 
-function launch() {
-	crawl();
-	//interval_handle = setInterval(crawl, interval);	
-}
-
-launch();
-
+//retrieve names and callback upon completion
+var data = new name.Data(crawl);
