@@ -4,8 +4,8 @@
   "description": "",
   "main": "crawler.js",
   "scripts": {
-    "test": "nodejs server/test_search.js",
-    "lastfm": "nodejs crawler/crawler.js"
+    "lasftm-server-test": "nodejs lastfm/server/test_search.js",
+    "lastfm": "nodejs lastfm/crawler/crawler.js"
   },
   "author": "Hengrui CAO",
   "license": "NONE",

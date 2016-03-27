@@ -7,7 +7,7 @@ var csv_path = [
 	"Last_Names.csv"
 	];
 
-var prefixes = process.env.CSV_PREFIX || "../names/CSV_Database_of_";
+var prefixes = process.env.CSV_PREFIX || "./names/CSV_Database_of_";
 
 csv_path[0] = prefixes + csv_path[0];
 csv_path[1] = prefixes + csv_path[1];
