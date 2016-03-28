@@ -32,3 +32,21 @@ _.Data = function(c){
 	// 	})
 	// 	);
 }
+
+/*
+Use case as follow
+
+var name = require("../names"); //if your file is in subfolder or whatever, put relative path
+
+var data = new name.Data(function(){
+	//Will be called once names get initialised
+
+	for (var i = 0; i < data.firstnames.length; ++i) {
+		console.log(data.firstnames[i]); //access to one first name and do staff
+	}
+
+	//for now lastnames is not retrieved since i didnt need it, can do by uncomment code above
+	//and add a bit of additional staff
+});
+
+*/
