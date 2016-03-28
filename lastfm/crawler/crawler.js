@@ -1,4 +1,4 @@
-var name = require("./names.js");
+var name = require("../../names");
 var fmapi = require("./lastfm");
 var utils = require("./utils");
 var db = require("./database");
