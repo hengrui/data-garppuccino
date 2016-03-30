@@ -7,6 +7,7 @@ var outputData;
 var async = require('async');
 var arr = [];
 var item = 220;
+
 (function() {
 	var c = 0;
 	var timeout = setInterval(function() {
