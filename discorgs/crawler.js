@@ -1,8 +1,8 @@
 var Discogs = require('disconnect').Client;
 var db = new Discogs().database();
 var fs = require('fs');
-var outputFilename = 'myData.json';
-var unfoundIDContainer = 'unfoundIDs.txt';
+var outputFilename = 'discorgs/myData.json';
+var unfoundIDContainer = 'discorgs/unfoundIDs.txt';
 var outputData;
 var async = require('async');
 var arr = [];
