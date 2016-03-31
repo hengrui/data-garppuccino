@@ -1,14 +1,18 @@
 #Crawler using Discorgs API (disconnect)
 
-#crawler.js
+##crawler.js
 Crawler using Discorgs API
 
-#myData.json
+##myData.json
 Json file stores data retrieved from discorgs API
 
-#restore.js
+##restore.js
 read JSON file and restore data into database
+Here we use postgreSQL
 
-#unfoundIDs.txt
+##testPG.js
+just some codes to test the postgreSQL interface
+
+##unfoundIDs.txt
 IDs used for retrieving are iterated so that some of them might fail
 
