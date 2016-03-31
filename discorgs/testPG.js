@@ -4,7 +4,7 @@ var conString = "postgres://jack:bigdata@localhost/EnAsn";
 var client = new pg.Client(conString);
 
 var sqls = {
-	'insertSQL1': 'insert into weather(id, city, date) values(9, \'A\', \'2016-03-31\')',
+	'insertSQL1': 'insert into weather(id, city, date) values(1, \'A\', \'2016-03-31\')',
 	'selectSQL1': 'select max(id) from weather',
 	'insertSQL2': 'insert into weather(city, date, id) values(\'D\', \'2016-03-31\', ',
 	'selectSQL2': 'select max(id) from weather'
