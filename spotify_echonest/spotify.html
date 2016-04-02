@@ -1,7 +1,7 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<!-- <link rel="stylesheet" type="text/css" href="style.css">
- -->
+<script src="handlebars-v4.0.5.js"></script>
+<script src="jquery-2.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+
 <div class="container">
     <h1>Search for an Artist</h1>
     <p>Type an artist name and click on "Search". Then, click on any album from the results to play 30 seconds of its first track.</p>
@@ -48,15 +48,6 @@ var fetchTracks = function (albumId, callback) {
     });
 };
 
-var searchSongs = function (artistID, callback) {
-  $.ajax({
-      url: 'https://api.spotify.com/v1/artists/' + artistID + '/toptracks',
-      success: function (response) {
-          console.log(JSON.stringify(response));
-      }
-  })
-}
-
 var searchArtists = function (query, offset) {
     $.ajax({
         url: 'https://api.spotify.com/v1/search',
@@ -82,6 +73,72 @@ var searchArtists = function (query, offset) {
         }
     });
 };
+
+var searchAlbums = function (artistID) {
+    $.ajax({
+        url: 'https://api.spotify.com/v1/artists/'+ artistID + '/albums',
+        data: {
+            album_type: 'single,album',
+			limit: 50,
+			offset: 0
+        },
+        success: function (response) {
+            console.log(response)
+            if(!response.items.length)
+                return;
+            else{
+              //*** CONSOLE OUTPUT
+              $.each(response.items, function(i, item){
+                  console.log((i) + ' - ' + item.name + ' - ' + item.id);
+              });
+            }
+        }
+    });
+};
+
+var searchSongsFromAlbum = function (albumID) {
+    $.ajax({
+        url: 'https://api.spotify.com/v1/albums/'+ albumID + '/tracks',
+        data: {
+			limit: 50,
+			offset: 0
+        },
+        success: function (response) {
+            console.log(response)
+            if(!response.items.length)
+                return;
+            else{
+              //*** CONSOLE OUTPUT
+              $.each(response.items, function(i, item){
+                  console.log((i) + ' - ' + item.name + ' - ' + item.id);
+              });
+            }
+        }
+    });
+};
+
+var searchAudioFeatures = function (trackID) {
+   $.ajax({
+        url: 'https://api.spotify.com/v1/audio-features/',
+        data: {
+			Authorization: 'Bearer ' + accessToken, 
+			ids: '2NXumjnQqHB1v06SWgI3Jq'
+        },
+        success: function (response) {
+            console.log(response)
+            if(!response.items.length)
+                return;
+            else{
+              //*** CONSOLE OUTPUT
+              $.each(response.items, function(i, item){
+                  console.log((i) + ' - ' + item.name + ' - ' + item.id);
+              });
+            }
+        }
+    });
+};
+
+var getAccessToken
 
 document.getElementById('search-form').addEventListener('submit', function (e) {
     e.preventDefault();
