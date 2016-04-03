@@ -16,3 +16,5 @@ just some codes to test the postgreSQL interface
 ##unfoundIDs.txt
 IDs used for retrieving are iterated so that some of them might fail
 
+##crawler_to_line.js, readline.js
+Call 'node crawler_to_line.js | node readline.js' to receive data from command line
