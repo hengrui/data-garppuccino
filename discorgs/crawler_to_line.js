@@ -7,7 +7,7 @@ var outputData;
 var async = require('async');
 var arr = [];
 var item = 0;
-
+var upperBound = 10;//The searching upper boundary 
 (function() {
 	var timeout = setInterval(function() {
 		item++;
@@ -19,7 +19,7 @@ var item = 0;
 			if (data.message == undefined){
 				//console.log('Receive Info for release_id= ' + data.id);
 				JSONdata = JSON.stringify(data);
-				outputData = JSONdata + ',\n';
+				outputData = JSONdata;
 				console.log(outputData);
 				//fs.appendFileSync(outputFilename, outputData);
 			} else {
@@ -28,10 +28,9 @@ var item = 0;
 				fs.appendFileSync(unfoundIDContainer, outputID);
 			}
 		});
-		item++;
-		if (item > 5) {
+		if (item > upperBound) {
 			clearInterval(timeout);
 		}
 		
-	}, 321);
+	}, 3210);
 })();
