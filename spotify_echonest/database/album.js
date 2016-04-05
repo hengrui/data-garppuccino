@@ -10,8 +10,9 @@ var _ = module.exports = {}
 
 // params {
 // values
+// artist_id
 // }
-_.table = 'spotify_artist';
+_.table = 'spotify_album';
 
 _.insert = function(params, c){
 	var values = [];
@@ -22,7 +23,8 @@ _.insert = function(params, c){
 		var value = params.values[i];
 		var obj = utils._.extend({},
 			{raw: JSON.stringify(value)},
-			{id: value.id, name: value.name, popularity: value.popularity}
+			{id: value.id, name: value.name},
+			{artist_id: params.artist_id || value.artist_id}
 			);
 		values.push(obj);
 	}
@@ -34,7 +36,9 @@ _.insert = function(params, c){
       		squel.values().setFieldsRows(values),
       		"v(" + fields.join(",") + ")")
       	.where("v.name not in ?",
-      		squel.select().field('g.name').from(_.table, 'g'))
+      		squel.select().field('g.name')
+      		.from(_.table, 'g')
+      		.where('g.artist_id = v.artist_id'))
       )
   .returning("*");
 
