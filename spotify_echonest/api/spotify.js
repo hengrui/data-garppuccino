@@ -22,13 +22,24 @@ _.Request = function(params, call) {
 	});
 }
 
-// params
+// params {
 // limit
 // offset
 // q for name
+// }
 _.SearchArtist = function(params, call){
 	params.type = 'artist';
 	var obj = {uri: '/search', data: params};
 	_.Request(obj, call);
 }
 
+// params {
+// limit
+// offset
+// artist_id for artist
+// }
+_.SearchArtistAlbums = function(params, call){
+	params.type = 'album';
+	var obj = {uri:'/artists/'+ params.artist_id + '/albums', data:params};
+	_.Request(obj, call);
+}

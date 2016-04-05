@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS spotify_album(
 	artist_id varchar(128),
 	raw text, 
 	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name)
+	PRIMARY KEY(id, artist_id)
 );
 
 CREATE TABLE IF NOT EXISTS spotify_track(
@@ -28,5 +28,5 @@ CREATE TABLE IF NOT EXISTS spotify_track(
 	album_id varchar(128),
 	raw text, 
 	update_on timestamp DEFAULT NOW(),
-	PRIMARY KEY(name)
+	PRIMARY KEY(id)
 );
