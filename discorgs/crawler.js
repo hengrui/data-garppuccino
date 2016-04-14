@@ -1,37 +1,28 @@
-var Discogs = require('disconnect').Client;
-var db = new Discogs().database();
-var fs = require('fs');
-var outputFilename = 'discorgs/myData.json';
-var unfoundIDContainer = 'discorgs/unfoundIDs.txt';
-var outputData;
-var async = require('async');
-var arr = [];
-var item = 220;
-
-(function() {
-	var c = 0;
-	var timeout = setInterval(function() {
-		item++;
-		var JSONdata;
-		var outputData;
-		db.release(item, function(err, data){
-			if (data == undefined){
-			} else
-			if (data.message == undefined){
-				console.log('Receive Info for release_id= ' + data.id);
-				JSONdata = JSON.stringify(data);
-				outputData = JSONdata + ',\n';
-				fs.appendFileSync(outputFilename, outputData);
-			} else {
-				console.log('No data for release_id= ' + item);;
-				var outputID = item + '\n';
-				fs.appendFileSync(unfoundIDContainer, outputID);
-			}
-		});
-		c++;
-		/*if (c > 2) {
-			clearInterval(timeout);
-		}
-		*/
-	}, 321);
+var crawler = require("./crawler_methods.js");
+var option = process.argv;
+//option contain the argvs from command line in below form:
+//0 : node
+//1 : crawler.js
+//2 : release/artist/label/master indicates the target db method
+//3 : a number discribes the starting point
+//4 : a number discribes the ending point
+(function(){
+	var method = option[2];
+	var start = option[3];
+	var end = option[4];
+	switch (method){
+		case 'release':
+			crawler.release(start, end);
+			break;
+		case 'artist':
+			crawler.artist(start, end);
+			break;
+		case 'label':
+			crawler.label(start, end);
+			break;
+		case 'master':
+			crawler.master(start, end);
+			break;
+	}
 })();
+
