@@ -1,7 +1,14 @@
 #Crawler using Discorgs API (disconnect)
 
 ##crawler.js
-Crawler using Discorgs API
+Three argvs is needed for this function in such form:
+node crawler.js method start end
+-method, one of 'release', 'label', 'artist', 'master'
+-start, a number indicates the searching starting point
+-end, a number indicates the ending point
+
+##crawler_methods.js
+Contains four types of crawling methods
 
 ##myData.json
 Json file stores data retrieved from discorgs API
