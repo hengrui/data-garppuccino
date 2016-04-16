@@ -36,5 +36,8 @@ _.SearchAlbum = function(params, call){
 _.SearchTrack = function(params, call){
 	//id = spotify:track:5ChkMS8OtdzJeqyybCc9R5
 	
+	tracks: {uri: '/track/profile', bucket: 'audio_summary', id: track.uri}
+	songs: {uri: '/song/profile', track_id: track.uri, bucket: ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', 'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', 'song_hotttnesss', 'song_hotttnesss_rank', 'song_type', 'tracks']}
 }
-'audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', 'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', 'song_hotttnesss', 'song_hotttnesss_rank', 'song_type', 'tracks'
+
+//no album API for echonest
