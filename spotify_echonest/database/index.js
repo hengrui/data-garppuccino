@@ -5,5 +5,6 @@ var _ = module.exports = {
 	Track: require("./track.js"),
 	echonest: {
 		Artist : require("./ech-artist.js")
+		Song : require("./ech-song.js")
 	}
 }
