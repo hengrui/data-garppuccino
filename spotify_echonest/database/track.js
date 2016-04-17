@@ -24,7 +24,10 @@ _.insert = function(params){
 		var obj = utils._.extend({},
 			{raw: JSON.stringify(value)},
 			{id: value.id, name: value.name},
-			{album_id: params.album_id || value.artist_id}	
+			{disc_number: value.disc_number},
+			{track_number: value.track_number},
+			{duration: value.duration_ms || ''},
+			{album_id: params.album_id || value.artist_id}
 			);
 		values.push(obj);
 	}

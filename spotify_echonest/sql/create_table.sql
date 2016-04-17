@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS spotify_track(
 	id varchar(128),
 	name varchar(512), 
 	album_id varchar(128),
+	duration INTEGER,
+	disc_number INTEGER,
+	track_number INTEGER,
 	raw text, 
 	update_on timestamp DEFAULT NOW(),
 	PRIMARY KEY(id)

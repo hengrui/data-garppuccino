@@ -7,9 +7,9 @@ var utils = require('./utils');
 
 var main = function(){
 	//once names readed, this function gets called;
-	//crawlArtist({limit: 10});
-	//crawlArtistAlbums({limit:50, offset:0});
-	crawlAlbumTracks({limit: 10, offset: 0});
+	//crawlArtist();
+	//crawlArtistAlbums();
+	crawlAlbumTracks({limit: 50, offset: 0});
 }
 
 var crawlArtist = function(_){
@@ -116,9 +116,9 @@ var crawlTrack = function(_, c) {
 			if (tracks.length > 0)
 				db.Track.insert({values: tracks, album_id: _.album_id});
 			// for logs
-			for(var i = 0; i<tracks.length; i++){
-				console.log(tracks[i].id + ' - ' + tracks[i].name);
-			}
+			//for(var i = 0; i<tracks.length; i++){
+				//console.log(tracks[i].id + ' - ' + tracks[i].name);
+			//}
 			 
 			if (tracks.length < _.limit) {
 				c && c(); //inform that this artist is finished
