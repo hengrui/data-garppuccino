@@ -1,4 +1,5 @@
 var request = require('request');
+var Promise = require('../promise');
 
 var baseUrl = 'https://api.spotify.com/v1';
 
@@ -13,12 +14,17 @@ var _ = module.exports = {};
 // uri: '' string
 // data: object/query parameters to pass
 _.Request = function(params, call) {
-	request({baseUrl: baseUrl, uri: params.uri, qs: params.data},
-		function(err, result, body){
-			if (err) {		
-				console.error(err);
-			}
-			call && call(body, err);
+	// Promise allows simplier syntax using then and
+	// catch rather than nested callbacks
+	return new Promise(function(resolve, reject) {
+		request({baseUrl: baseUrl, uri: params.uri, qs: params.data},
+			function(err, result, body){
+				if (err) {		
+					reject(err);
+					console.error(err);
+				} else
+				resolve(body);
+		})
 	});
 }
 
@@ -27,10 +33,10 @@ _.Request = function(params, call) {
 // offset
 // q for name
 // }
-_.SearchArtist = function(params, call){
+_.SearchArtist = function(params){
 	params.type = 'artist';
 	var obj = {uri: '/search', data: params};
-	_.Request(obj, call);
+	return _.Request(obj);
 }
 
 // params {
@@ -38,8 +44,8 @@ _.SearchArtist = function(params, call){
 // offset
 // artist_id for artist
 // }
-_.SearchArtistAlbums = function(params, call){
+_.SearchArtistAlbums = function(params){
 	params.type = 'album';
 	var obj = {uri:'/artists/'+ params.artist_id + '/albums', data:params};
-	_.Request(obj, call);
+	return _.Request(obj);
 }

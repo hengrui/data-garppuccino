@@ -8,7 +8,7 @@ var utils = require('./utils');
 var main = function(){
 	//once names readed, this function gets called;
 	//crawlArtist({limit: 10});
-	crawlArtistAlbums({limit:50, offset:100});
+	crawlArtistAlbums({limit:50, offset:0});
 }
 
 var crawlArtist = function(_){
@@ -16,21 +16,24 @@ var crawlArtist = function(_){
 
 	if (_.index + 1 < data.firstnames.length) { //+1 to omit the header row
 		var fname = data.firstnames[_.index + 1][0];
-		api.spotify.SearchArtist({q: fname, limit:_.limit, offset: _.offset},
-			function(response, err){
-			response = JSON.parse(response);
-			var artists = response['artists']['items'];
-			//console.log(artists);
-			db.Artist.insert({values: artists});
-			if (artists.length < _.limit) {
-				++_.index;
-				_.offset = 0;
-				crawlArtist(_);	
-			} else {
-				_.offset += _.limit;
-				crawlArtist(_);
-			}
-		});
+
+		api.spotify.SearchArtist({q: fname, limit:_.limit, offset: _.offset})
+		.then(
+			function(response){
+				response = JSON.parse(response);
+				var artists = response['artists']['items'];
+				//console.log(artists);
+				db.Artist.insert({values: artists});
+				if (artists.length < _.limit) {
+					++_.index;
+					_.offset = 0;
+					crawlArtist(_);	
+				} else {
+					_.offset += _.limit;
+					crawlArtist(_);
+				}
+			});
+
 	}
 }
 
@@ -43,8 +46,8 @@ var crawlArtist = function(_){
 // c to inform that this search is finished
 var crawlAlbum = function(_, c) {
 	api.spotify.SearchArtistAlbums(
-		utils._.extend(_, {album_type: 'album'}),
-		function(response, err){
+		utils._.extend(_, {album_type: 'album'})).then(
+		function(response){
 			response = JSON.parse(response);
 			var albums = response['items'];
 			if (albums.length > 0)
@@ -62,6 +65,17 @@ var crawlAlbum = function(_, c) {
 	});
 }
 
+var echoArtist = function(artist) {
+	return api.echonest.ArtistProfile({artist_uri: artist.raw.uri})
+	.then(function(r) {
+		db.echonest.Artist.insert(
+			{values: {id: artist.id, raw: r}})
+		.then(function(r) {console.log('saved');})
+		;
+		// the above then can be commented or leave for else
+	});
+}
+
 // _ {
 // limit
 // }
@@ -70,13 +84,16 @@ var crawlArtistAlbums = function(_){
 	_ = utils._.defaults(_, {index: 0, array:[], limit:50, offset: 0});
 	if (_.index >= _.array.length) {
 		_.offset += _.array.length;
-		db.Artist.get(_, function(result, err) {
-			if (!err) {
-				_.array = result.rows;
-				_.index = 0;
-				return crawlArtistAlbums(_);
+		db.Artist.get(_)
+		.then(function(result) {
+			_.array = result.rows;
+			_.index = 0;
+			for (var i = 0; i < _.array.length; ++i) {
+				_.array[i].raw = JSON.parse(_.array[i].raw);
+				//console.log(_.array[i].raw.uri);
 			}
-		});		
+			return _;
+		}).then(crawlArtistAlbums);	
 	} else {
 		//do staff with one artist in database
 		var artist = _.array[_.index];
@@ -89,7 +106,9 @@ var crawlArtistAlbums = function(_){
 			//then api call back
 			++_.index;
 			crawlArtistAlbums(_);
-		})
+		});
+		echoArtist(artist);
+		//echoArtist
 	}
 }
 

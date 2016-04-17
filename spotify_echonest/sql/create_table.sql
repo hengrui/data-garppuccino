@@ -30,3 +30,9 @@ CREATE TABLE IF NOT EXISTS spotify_track(
 	update_on timestamp DEFAULT NOW(),
 	PRIMARY KEY(id)
 );
+
+CREATE TABLE IF NOT EXISTS echonest_artist(
+	id varchar(128),
+	raw text,
+	PRIMARY KEY(id)
+)

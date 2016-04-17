@@ -14,7 +14,7 @@ var _ = module.exports = {}
 // }
 _.table = 'spotify_album';
 
-_.insert = function(params, c){
+_.insert = function(params){
 	var values = [];
 	var q = squel.insert().into(_.table);
 
@@ -42,7 +42,7 @@ _.insert = function(params, c){
       )
   .returning("*");
 
-	db.query(q.toString(), c);
+	return db.query(q.toString());
 }
 
 // params {
@@ -52,7 +52,7 @@ _.insert = function(params, c){
 // }
 // to get artists, access to result.rows then iterate through
 // item.id
-_.get = function(params, c) {
+_.get = function(params) {
 	var q = squel.select().from(_.table);
 	params.limit && q.limit(params.limit);
 	params.offset && q.offset(params.offset);
@@ -61,5 +61,5 @@ _.get = function(params, c) {
 		q.where(k + " = ?", params.where[k]);
 	}
 	q.order('update_on');
-	db.query(q.toString(), c);
+	return db.query(q.toString());
 }

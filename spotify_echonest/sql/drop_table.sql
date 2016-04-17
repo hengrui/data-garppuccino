@@ -5,3 +5,4 @@
 DROP TABLE spotify_artist;
 DROP TABLE spotify_tracks;
 DROP TABLE spotify_album;
+DROP TABLE echonest_artist;
