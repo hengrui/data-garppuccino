@@ -53,10 +53,6 @@ var crawlAlbum = function(_, c) {
 			var albums = response['items'];
 			if (albums.length > 0)
 				db.Album.insert({values: albums, artist_id: _.artist_id});
-			// for logs
-			// for(var i = 0; i<albums.length; i++){
-				// console.log(albums[i].id + ' - ' + albums[i].name);
-			// }
 			if (albums.length < _.limit) {
 				c && c(); //inform that this artist is finished
 			} else {
@@ -80,7 +76,6 @@ var crawlArtistAlbums = function(_){
 			_.index = 0;
 			for (var i = 0; i < _.array.length; ++i) {
 				_.array[i].raw = JSON.parse(_.array[i].raw);
-				//console.log(_.array[i].raw.uri);
 			}
 			return _;
 		}).then(crawlArtistAlbums);	

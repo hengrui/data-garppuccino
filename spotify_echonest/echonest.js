@@ -14,7 +14,9 @@ var echoArtist = function(artist) {
 	.then(function(r) {
 		db.echonest.Artist.insert(
 			{values: {id: artist.id, raw: r}})
-		.then(function(r) {console.log('saved');})
+		.then(function(r) {
+			console.log(r.row.length > 0 ? 'saved' : 'ignored');}
+		)
 		;
 		// the above then can be commented or leave for else
 	});
@@ -49,9 +51,9 @@ var spotifyArtist = function(_){
 		return Promise.all(requests);
 	})
 	.then(function() {
-		console.log('finished');
+		//console.log('finished');
 		// _.offset += _.array.length;
-		// spotifyArtist(_);
+		spotifyArtist(_);
 	});
 }
 
