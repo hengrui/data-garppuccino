@@ -10,6 +10,10 @@ node crawler.js method start end
 ##crawler_methods.js
 Contains four types of crawling methods
 
+##crawler_search_by_name.js
+Searching artists by using thier names as params
+white spaces are acceptable
+
 ##myData.json
 Json file stores data retrieved from discorgs API
 
