@@ -49,3 +49,13 @@ _.SearchArtistAlbums = function(params){
 	var obj = {uri:'/artists/'+ params.artist_id + '/albums', data:params};
 	return _.Request(obj);
 }
+
+// params {
+// limit
+// offset
+// album_id for album
+// }
+_.SearchAlbumTracks = function(params){
+	var obj = {uri:'/albums/' + params.album_id + '/tracks', data: params}
+	return _.Request(obj);
+}

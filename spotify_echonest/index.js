@@ -8,7 +8,8 @@ var utils = require('./utils');
 var main = function(){
 	//once names readed, this function gets called;
 	//crawlArtist({limit: 10});
-	crawlArtistAlbums({limit:50, offset:0});
+	//crawlArtistAlbums({limit:50, offset:0});
+	crawlAlbumTracks({limit: 10, offset: 0});
 }
 
 var crawlArtist = function(_){
@@ -96,8 +97,69 @@ var crawlArtistAlbums = function(_){
 			++_.index;
 			crawlArtistAlbums(_);
 		});
-		echoArtist(artist);
-		//echoArtist
+	}
+}
+
+// artist being one tuple in artist database
+// _ {
+// artist_id
+// limit
+// offset
+// }
+// c to inform that this search is finished
+var crawlTrack = function(_, c) {
+	api.spotify.SearchAlbumTracks(
+		_).then(
+		function(response){
+			response = JSON.parse(response);
+			var tracks = response['items'];
+			if (tracks.length > 0)
+				db.Track.insert({values: tracks, album_id: _.album_id});
+			// for logs
+			for(var i = 0; i<tracks.length; i++){
+				console.log(tracks[i].id + ' - ' + tracks[i].name);
+			}
+			 
+			if (tracks.length < _.limit) {
+				c && c(); //inform that this artist is finished
+			} else {
+				_.offset += _.limit;
+				crawlTrack(_, c);
+			}
+	});
+}
+
+// _ {
+// limit
+// }
+// can later add track in callback as well
+var crawlAlbumTracks = function(_){
+	_ = utils._.defaults(_, {index: 0, array:[], limit:50, offset: 0});
+	if (_.index >= _.array.length) {
+		_.offset += _.array.length;
+		db.Album.get(_)
+		.then(function(result) {
+			_.array = result.rows;
+			_.index = 0;
+			for (var i = 0; i < _.array.length; ++i) {
+				_.array[i].raw = JSON.parse(_.array[i].raw);
+				//console.log(_.array[i].raw.uri);
+			}
+			return _;
+		}).then(crawlAlbumTracks);	
+	} else {
+		//do stuff with one album in database
+		var album = _.array[_.index];
+
+		crawlTrack({
+			limit: 50,
+			offset: 0,
+			album_id: album.id
+		}, function(undefined_album_finished){
+			//then api call back
+			++_.index;
+			crawlAlbumTracks(_);
+		});
 	}
 }
 
