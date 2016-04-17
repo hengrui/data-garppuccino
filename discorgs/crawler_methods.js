@@ -17,11 +17,11 @@ function release(start, upperBound) {
 				console.log('Receive Info for release_id= ' + data.id);
 				JSONdata = JSON.stringify(data);
 				var outputData = JSONdata + ',\n';
-				//fs.appendFileSync(outputFilenames+'release.json', outputData);
+				fs.appendFileSync(outputFilenames+'release.json', outputData);
 			} else {
 				console.log('No data for release_id= ' + item);;
 				var outputID = item + '\n';
-				//fs.appendFileSync(unfoundIDContainers+'release.txt', outputID);
+				fs.appendFileSync(unfoundIDContainers+'release.txt', outputID);
 			}
 		});
 		if (item >= upperBound) {
@@ -44,11 +44,11 @@ function artist(start, upperBound) {
 				console.log('Receive Info for artist_id= ' + data.id);
 				JSONdata = JSON.stringify(data);
 				var outputData = JSONdata + ',\n';
-				//fs.appendFileSync(outputFilenames+'artist.json', outputData);
+				fs.appendFileSync(outputFilenames+'artist.json', outputData);
 			} else {
 				console.log('No data for artist_id= ' + item);;
 				var outputID = item + '\n';
-				//fs.appendFileSync(unfoundIDContainers+'artist.txt', outputID);
+				fs.appendFileSync(unfoundIDContainers+'artist.txt', outputID);
 			}
 		});
 		if (item >= upperBound) {
@@ -71,11 +71,11 @@ function label(start, upperBound) {
 				console.log('Receive Info for label_id= ' + data.id);
 				JSONdata = JSON.stringify(data);
 				var outputData = JSONdata + ',\n';
-				//fs.appendFileSync(outputFilenames+'label.json', outputData);
+				fs.appendFileSync(outputFilenames+'label.json', outputData);
 			} else {
 				console.log('No data for label_id= ' + item);;
 				var outputID = item + '\n';
-				//fs.appendFileSync(unfoundIDContainers+'label.txt', outputID);
+				fs.appendFileSync(unfoundIDContainers+'label.txt', outputID);
 			}
 		});
 		if (item >= upperBound) {
@@ -98,11 +98,11 @@ function master(start, upperBound) {
 				console.log('Receive Info for master_id= ' + data.id);
 				JSONdata = JSON.stringify(data);
 				var outputData = JSONdata + ',\n';
-				//fs.appendFileSync(outputFilenames+'master.json', outputData);
+				fs.appendFileSync(outputFilenames+'master.json', outputData);
 			} else {
 				console.log('No data for master_id= ' + item);;
 				var outputID = item + '\n';
-				//fs.appendFileSync(unfoundIDContainers+'master.txt', outputID);
+				fs.appendFileSync(unfoundIDContainers+'master.txt', outputID);
 			}
 		});
 		if (item >= upperBound) {
