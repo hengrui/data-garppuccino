@@ -65,17 +65,6 @@ var crawlAlbum = function(_, c) {
 	});
 }
 
-var echoArtist = function(artist) {
-	return api.echonest.ArtistProfile({artist_uri: artist.raw.uri})
-	.then(function(r) {
-		db.echonest.Artist.insert(
-			{values: {id: artist.id, raw: r}})
-		.then(function(r) {console.log('saved');})
-		;
-		// the above then can be commented or leave for else
-	});
-}
-
 // _ {
 // limit
 // }
