@@ -49,14 +49,16 @@ _.ArtistProfile = function(params){
 
 //http://developer.echonest.com/docs/v4/track.html#profile
 //http://developer.echonest.com/docs/v4/song.html#profile
-_.SearchTrack = function(params, call){
+_.SongProfile = function(params, call){
 	//id = spotify:track:5ChkMS8OtdzJeqyybCc9R5
 	var obj = {
-		tracks: {uri: '/track/profile', bucket: 'audio_summary', id: track.uri},
-		songs: {uri: '/song/profile', track_id: track.uri,
-		bucket: ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', 'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', 'song_hotttnesss',
-		'song_hotttnesss_rank', 'song_type', 'tracks']}
+		songs: {uri: '/song/profile', data: {id: params.track.uri,
+		bucket: ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', 'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', 'song_hotttnesss', 'song_hotttnesss_rank', 'song_type', 'tracks']}
 	}
 }
 
+
+_.TrackProfile = function(params, call){
+	var obj = {tracks: {uri: '/track/profile', bucket: 'audio_summary', id: track.uri}}
+}
 //no album API for echonest

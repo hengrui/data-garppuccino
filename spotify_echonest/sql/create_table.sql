@@ -39,3 +39,9 @@ CREATE TABLE IF NOT EXISTS echonest_artist(
 	raw text,
 	PRIMARY KEY(id)
 )
+
+CREATE TABLE IF NOT EXISTS echonest_song(
+	id varchar(128),
+	raw text,
+	PRIMARY KEY(id)
+)
