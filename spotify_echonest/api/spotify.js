@@ -13,7 +13,7 @@ var _ = module.exports = {};
 // params as follow
 // uri: '' string
 // data: object/query parameters to pass
-_.Request = function(params, call) {
+_.Request = function(params) {
 	// Promise allows simplier syntax using then and
 	// catch rather than nested callbacks
 	return new Promise(function(resolve, reject) {
