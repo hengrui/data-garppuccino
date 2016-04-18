@@ -13,7 +13,8 @@ Track.detail = function(param, c) {
 				track.id = track.mbid;
 				track.artist_name = track.artist.name;
 				track.artist_id = track.artist.mbid || '';
-				track.tags = track.toptags.tag || [];		
+				track.tags = track.toptags.tag || [];
+				track.raw = JSON.stringify(track);
 				var obj = db.Track.value(track);
 				db.Track.insert({
 					where: {name:param.name,

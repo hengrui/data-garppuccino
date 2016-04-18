@@ -79,6 +79,7 @@ var getAlbums = Artist.albums = function(param, callBack) {
 						elem.id = elem.mbid || '';
 						elem.artist_name = param.artist;
 						elem.artist_id = param.id || '';
+						elem.raw = JSON.stringify(elem);
 						conv.push(db.Album.value(elem));
 					});
 					db.Album.insert({values: conv}, function(res, err){

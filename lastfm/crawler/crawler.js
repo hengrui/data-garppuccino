@@ -29,29 +29,6 @@ var crawlTrack = function(_) {
 	});
 }
 
-var nal = 2482;
-var crawlAlbum = function() {
-	db.Artist.get({limit: limit, offset: nal}, function(res, error) {
-		var artists = res.rows;
-		utils._.each(artists, function(artist) {
-			crawler.Artist.albums(artist, function(albums, n){
-						utils._.each(albums, function(album) {
-								crawler.Album.detail(album, function(album, tracks) {
-								});
-						});
-						n && n();
-					});
-			crawler.Artist.detail(artist);
-		});
-		nal += artists.length;
-		if (artists.length == limit) {
-			crawlAlbum();		
-		} else {
-			setTimeout(crawlAlbum, 1000);
-		}
-	});
-}
-
 var crawlArtist = function(_){
 	_ = utils._.defaults(_, {index: 0, limit:50, offset:0});
 	var index = _.index;

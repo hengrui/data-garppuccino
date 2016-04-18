@@ -5,12 +5,13 @@ var db = require("../database");
 var Album = module.exports = {};
 
 Album.detail = function(param, c) {
-	fmapi.GetAlbumInfo({artist: param.artist,
+	fmapi.GetAlbumInfo({artist: param.artist_name,
 		id:param.id, album: param.name},
 		function(result, err) {
 			if (!err && result.album){
 				var album = result.album;
 				album.id = album.mbid;
+				album.raw = JSON.stringify(album);
 				var obj = db.Album.value(album);
 				db.Album.update({
 					where: {name:album.name,
@@ -31,6 +32,9 @@ Album.detail = function(param, c) {
 						});						
 					}
 				});
+				c && c(album);
 			}
+			else
+			c && c();
 	})
 }
