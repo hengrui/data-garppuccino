@@ -54,6 +54,7 @@ _.SongProfile = function(params, call){
 	var obj = {
 		songs: {uri: '/song/profile', data: {id: params.track.uri,
 		bucket: ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', 'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', 'song_hotttnesss', 'song_hotttnesss_rank', 'song_type', 'tracks']}
+		}
 	}
 }
 

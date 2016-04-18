@@ -4,7 +4,7 @@ var _ = module.exports = {
 	Album: require("./album.js"),
 	Track: require("./track.js"),
 	echonest: {
-		Artist : require("./ech-artist.js")
+		Artist : require("./ech-artist.js"),
 		Song : require("./ech-song.js")
 	}
 }
