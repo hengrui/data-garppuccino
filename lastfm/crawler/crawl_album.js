@@ -31,6 +31,6 @@ var crawlAlbum = function(_) {
 	});
 }
 
-var offset = (process.argv.length >= 3 && process.argv[2]) || 0;
+var offset = (process.env.OFFSET) || 0;
 
 crawlAlbum({offset: offset});
