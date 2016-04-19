@@ -34,12 +34,9 @@ var crawlArtist = function(_){
 	var index = _.index;
 	if (index < data.firstnames.length) {
 		var name = data.firstnames[index][0];
-		crawler.Artist.search({name: name, limit:1000}, function(artists, n) {
-			if (!n) {			
-				++_.index;
+		crawler.Artist.search({name: name, limit:200}, function(artists, n) {
+				_.index += 3;
 				crawlArtist(_);
-			}
-			n && n();
 		});
 	} else {
 		console.log('Artist crawl finished ' + findex);
@@ -51,9 +48,9 @@ var report = function(){
 }
 
 var crawl = function(){
-	crawlArtist();
-	crawlTrack();
-	crawlAlbum();
+	crawlArtist({offset: (parseInt(process.env.OFFSET)) || 0 });
+	//crawlTrack();
+	//crawlAlbum();
 	//setInterval(report, 1000);
 }
 
