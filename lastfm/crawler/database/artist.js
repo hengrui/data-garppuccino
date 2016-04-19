@@ -13,7 +13,8 @@ var attributes = Artist.attributes =
 	"listeners":[db.Int],
 	"playcount":[db.Int],
 	"bio" : [db.Json],
-	"tags": [db.Json]
+	"tags": [db.Json],
+	"raw" : [db.Json]
 	}
 
 Artist.value = function(obj){

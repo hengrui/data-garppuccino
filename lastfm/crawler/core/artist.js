@@ -29,6 +29,7 @@ var search = Artist.search = function(params, callBack) {
 				var conv = [];
 				utils._.each(artists, function(elem) {
 					elem.id = elem.mbid;
+					elem.raw = JSON.stringify(elem);
 					conv.push(db.Artist.value(elem));
 				});
 				db.Artist.insert({values: conv}, function(res, err){
@@ -48,6 +49,7 @@ var detail = Artist.detail = function(param, callBack) {
 			if (!err && result.artist){
 				var artist = result.artist;
 				artist.id = artist.mbid;
+				artist.raw = JSON.stringify(artist);
 				var obj = db.Artist.value(artist);
 				db.Artist.update({
 					where: {name:artist.name},

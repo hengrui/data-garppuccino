@@ -34,7 +34,7 @@ var crawlArtist = function(_){
 	var index = _.index;
 	if (index < data.firstnames.length) {
 		var name = data.firstnames[index][0];
-		crawler.Artist.search({name: name, limit:200}, function(artists, n) {
+		crawler.Artist.search({name: name, limit:1000}, function(artists, n) {
 				_.index += 3;
 				crawlArtist(_);
 		});
