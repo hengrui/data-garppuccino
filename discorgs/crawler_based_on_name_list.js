@@ -6,27 +6,24 @@ var artist_set = new Set();
 var artist_array;
 var release_set = new Set();
 var release_array;
-
-(function(){
-	//Get the input name from the command line
+var async = require('async');
+var fs = require('fs');
+function crawler_by_name(input_name){
+	/*Get the input name from the command line
 	if (process.argv.length > 2){
 		for (var i = 3; i < process.argv.length; i++)
 			input_name = input_name + ' ' + process.argv[i];
 	} else {
 		return ;
 	}
-	var token = 'init';
-				   //Token could be 'release', 'artist', 'search', 'init'
-				   //Specially 'init' calls db.search() to get the total page number
-				   //of the releases given the artist name, input_name 
+	*/
 	var params = {
 		type: "release",
-		per_page: "1000",
+		per_page: "100",
 		page: "1",
 		artist: ""
 	};
 	params['artist'] = input_name;
-	console.log(params);
 	var page_number = 1;
 	var current_page = 0;//Indicates the current page we are searching on
 	var exit_flag = 0;
@@ -34,100 +31,117 @@ var release_array;
 	var current_release = 0;
 	var artist_number;
 	var current_artist = 0;
-
-	//The searching function is tooooo time consuming
-	//maybe I should try to search singly and combine the rest together.
-	var timeout = setInterval(function(){
-		switch (token){
-			case 'init':
-				console.log('------init---------');
-				db.search(input_name, params, function(err, data){
-					if (err) {
-						return ;
-					} else {
-						page_number = data.pagination.pages;
-						//console.log(data.pagination.items);
-						//console.log(page_number);
-					}
-					token = 'search';
-				});
-				break;
-			case 'search':
-				current_page++;
-				console.log('-----search ' + current_page + '---------' + page_number);
-				if (current_page > page_number){
-					token = 'release';
-					release_array = release_set.toArray();
-					release_number = release_array.length;
-				} else {
-					params['page'] = "" + current_page;
-					db.search(input_name, params, function(err, data){
-						if (err) {
-							console.log(err);
-							return ;
-						} else {
-							for (var i = 0; i < data.results.length; i++)
+	var counter = 0;
+	var total_release;
+	async.series({
+		'init': function(callback){
+			console.log('--------init-------');
+			console.log(params);
+			db.search(input_name, params, function(err, data){
+				console.log(data.pagination);
+				page_number = data.pagination.pages;
+				total_release = data.pagination.items;
+				console.log(page_number);
+				callback(null, 'init');
+			});
+		},
+		'search': function(callback){
+			console.log('-------search---------');
+			var current_page = 0;
+			var counter = 0;
+			async.whilst(
+				function () { 
+					console.log(counter);
+					return current_page < page_number;
+				},
+				function (callback){
+					current_page++;
+					//console.log(current_page);
+					setTimeout(function(){
+						params['page'] = "" + current_page;
+						db.search(input_name, params, function(err, data){
+							for (var i = 0; i < data.results.length; i++){
 								release_set.add(data.results[i].id);
-						}
-					});
+								counter++;
+							}
+							callback(null, counter);
+						});
+					}, 521);
+				},
+				function (err, counter){
+					console.log('Totally '+counter+' items has been scaned');
+					
+					release_array = release_set.toArray();
+					callback(null, 'search');
 				}
-				break;
-			case 'release':
+			);
+		},
+		'release': function(callback){
+			console.log('-------release------');
+			release_number = release_array.length;
+			console.log(release_number + ' releases have been found');
+			var current_release = -1;
+			/*async.whilst(
+				function() { return current_release < release_number;},
+				function (callback) {
+					current_release++;
+					setTimeout(function(){
+					*/
+			var timeout = setInterval(function(){
 				current_release++;
-				console.log('-----release ' + current_release + '-----------' + release_number);
-				if (current_release > release_number){
-					token = 'artist';
+				var item = current_release;
+						db.release(release_array[item], function(err, data){
+							console.log('Receive release id = '+data.id+', '+item+'/'+release_number);
+						/*
+						 * var JSONdata = JSON.stringify(data);
+						 * var output = JSONdata + ',\n';
+						 * fs.appendFileSync('myData_release.json', output);
+						 */
+							for (var i = 0; i < data.artists.length; i++)
+								artist_set.add(data.artists[i].id);
+						//	callback(null, current_release);
+						});
+						if (current_release >= release_number){
+							clearInterval(timeout);
+							callback(null, 'release');
+						}
+					}, 321);
+				/*},
+				function (err, current_release){
+					console.log('Totally '+ current_release + ' releases have been stored');
 					artist_array = artist_set.toArray();
-					artist_number = artist_array.length;
-				} else {
-					db.release(release_array[current_release], function(err, data){
-						if (err){
-							console.log(err);
-							return ;
-						} else {
-							if (data == undefined){
-								console.log('No data for release id= ' + current_release);
-							} else if (data.message == undefined){
-								console.log('Get data of release id= ' + data.id);
-								var artists = data.artists;
-								for (var i = 0; i < artists.length; i++)
-									artist_set.add(artists[i].id);
-							} else {
-								console.log('No data for release id= ' + current_release);
-							}
-						}
-					});
+					callback(null, 'release');
 				}
-				break;
-			case 'artist':
+			);*/
+		},
+		'artist': function(callback){
+			console.log('--------artist--------');
+			artist_number = artist_array.length;
+			console.log(artist_number+' artits have been found');
+			var current_artist = -1;
+			var timeout = setInterval(function(){		
 				current_artist++;
-				console.log('--------artist '+ current_artist + ' ----------' + artist_number);
-				if (current_artist > artist_number){
-					console.log('Searching Completed!');
-					exit_flag = 1;
-				} else {
-					db.artist(artist_array[current_artist], function(err, data){
-						if (err) {
-							console.log(err);
-							return ;
-						} else {
-							if (data == undefined){
-								console.log('No data for aritst id= ' + current_artist);
-							} else if (data.message == undefined){
-								console.log('Get data of artist id= ' + data.id);
-							} else {
-								console.log('No data for artist id= ' + current_artist);
-							}
-						}
-					});
+				var item = current_artist;
+						db.artist(artist_array[item], function(err, data){
+							console.log('Receive artist id ='+data.id+', '+item+'/'+artist_number);
+							/*
+							 * var JSONdata = JSON.stringify(data);
+							 * var output = JSONdata + '.\n';
+							 * fs.appendFileSync('myData_artist.json', output);
+							 */
+						});
+				if (current_artist >= artist_number){
+					clearInterval(timeout);
+					callback(null, current_artist);
 				}
-				break;
+			}, 321);
+	},
+	function(err, result){
+		if (err) {
+			console.log(err);
 		}
-		if (exit_flag){
-			clearInterval(timeout);
-		}
-	}, 2521);
-
-})();
+	});
+}
+exports.crawler_by_name = crawler_by_name;
 
 
