@@ -17,8 +17,8 @@ var crawlAlbum = function(_) {
 					setTimeout(function(){
 						crawler.Album.detail(album, function(album, tracks) {
 							//console.log(album);
-							r();
 						});
+						r();
 					}, interval * index);
 				}));
 		});

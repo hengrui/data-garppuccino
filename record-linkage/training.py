@@ -82,7 +82,7 @@ for row_id, row in enumerate(data):
 if os.path.exists(settings_file):
     print 'reading from', settings_file
     with open(settings_file) as sf :
-        deduper = dedupe.StaticDedupe(sf)
+        deduper = dedupe.StaticDedupe(sf, num_cores=4)
 else:
     fields = [
         {'field' : 'album_name', 'type': 'String'},
