@@ -24,9 +24,13 @@ var db = new Discogs().database();
    companies[]{name, entity_type, catno, resource_url, id, entity_type_name},
    uri, formats[]{text, qty, description, name}, resource_url, data_quality
 */
-db.release(59316, function(err, data){
-	console.log(data.message == undefined);
+(function(){
+var id = process.argv[2];
+db.artist(id, function(err, data){
+	console.log(data);
+	//console.log(data.artists[0].id);
 		});
+})();
 /*
    db.release(5563545, function(err, data){
 	console.log('------------------------------------------------------');

@@ -103,6 +103,9 @@
 
    */
 var fs = require('fs');
+var squel = require('squel');
+
+var sql = squel.insert().into("discorgs");
 fs.readFile('./myData.json', 'utf8', function (err, data) {
 	if (err) {
 		console.log(err);
@@ -110,19 +113,14 @@ fs.readFile('./myData.json', 'utf8', function (err, data) {
 		var obj = JSON.parse(data);
 		//console.log(obj.length);	//The number of retrieved data	
 		//for (i = 0; i < obj.length; i++){
-			var row = obj[1];// just test the frist obj
+			var row = obj[0];// just test the frist obj
 			var counter = 0;
 			for (var myKey in row){
 				counter++;
-				
-				var str = "key: " + myKey + ", value: ";
-				console.log(str);
-				var att = row[myKey];
-				for (var item in att){
-					console.log(item + " : " + att[item]);
-					}
+				sql.set(JSON.stringify(myKey), JSON.stringify(row[myKey]));
 			}
 			console.log("Attibute num: " + counter);
+			console.log(sql.toString());
 		//}
 		
 	}

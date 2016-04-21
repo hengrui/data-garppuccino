@@ -7,12 +7,14 @@ var outputData;
 var async = require('async');
 var arr = [];
 var item = 0;
-var upperBound = 10;//The searching upper boundary 
+var upperBound = 1;//The searching upper boundary 
 (function() {
 	var timeout = setInterval(function() {
 		item++;
 		var JSONdata;
 		var outputData;
+		var arg = process.argv;
+		console.log(arg[2]);
 		db.release(item, function(err, data){
 			if (data == undefined){
 			} else
@@ -28,7 +30,7 @@ var upperBound = 10;//The searching upper boundary
 				fs.appendFileSync(unfoundIDContainer, outputID);
 			}
 		});
-		if (item > upperBound) {
+		if (item >= upperBound) {
 			clearInterval(timeout);
 		}
 		

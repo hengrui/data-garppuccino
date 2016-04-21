@@ -8,15 +8,11 @@ var release_set = new Set();
 var release_array;
 var async = require('async');
 var fs = require('fs');
+
+var total_time_counter = 0;
+var current_name = -1;
+
 function crawler_by_name(input_name){
-	/*Get the input name from the command line
-	if (process.argv.length > 2){
-		for (var i = 3; i < process.argv.length; i++)
-			input_name = input_name + ' ' + process.argv[i];
-	} else {
-		return ;
-	}
-	*/
 	var params = {
 		type: "release",
 		per_page: "100",
@@ -60,13 +56,18 @@ function crawler_by_name(input_name){
 					setTimeout(function(){
 						params['page'] = "" + current_page;
 						db.search(input_name, params, function(err, data){
-							for (var i = 0; i < data.results.length; i++){
-								release_set.add(data.results[i].id);
-								counter++;
+							if (data == undefined){
 							}
-							callback(null, counter);
+							else
+							if (data.results != undefined){
+								for (var i = 0; i < data.results.length; i++){
+									release_set.add(data.results[i].id);
+									counter++;
+								}
+								callback(null, counter);
+							}
 						});
-					}, 521);
+					}, 321);
 				},
 				function (err, counter){
 					console.log('Totally '+counter+' items has been scaned');
@@ -91,15 +92,20 @@ function crawler_by_name(input_name){
 				current_release++;
 				var item = current_release;
 						db.release(release_array[item], function(err, data){
-							console.log('Receive release id = '+data.id+', '+item+'/'+release_number);
+							if (data == undefined){
+							}
+							else if (data.message == undefined){
+								console.log('Receive release id = '+data.id+', '+item+'/'+release_number);
 						/*
 						 * var JSONdata = JSON.stringify(data);
 						 * var output = JSONdata + ',\n';
 						 * fs.appendFileSync('myData_release.json', output);
 						 */
-							for (var i = 0; i < data.artists.length; i++)
-								artist_set.add(data.artists[i].id);
+								for (var i = 0; i < data.artists.length; i++)
+									artist_set.add(data.artists[i].id);
 						//	callback(null, current_release);
+						//	
+							}
 						});
 						if (current_release >= release_number){
 							clearInterval(timeout);
@@ -123,12 +129,16 @@ function crawler_by_name(input_name){
 				current_artist++;
 				var item = current_artist;
 						db.artist(artist_array[item], function(err, data){
-							console.log('Receive artist id ='+data.id+', '+item+'/'+artist_number);
+							if (data == undefined){
+							}
+							else if (data.message == undefined){
+								console.log('Receive artist id ='+data.id+', '+item+'/'+artist_number);
 							/*
 							 * var JSONdata = JSON.stringify(data);
 							 * var output = JSONdata + '.\n';
 							 * fs.appendFileSync('myData_artist.json', output);
 							 */
+							}
 						});
 				if (current_artist >= artist_number){
 					clearInterval(timeout);
@@ -140,8 +150,10 @@ function crawler_by_name(input_name){
 		if (err) {
 			console.log(err);
 		}
-	});
-}
+	}
+	});//async
+}//function crawler_by_name();
+
 exports.crawler_by_name = crawler_by_name;
 
 
