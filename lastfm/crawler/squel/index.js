@@ -7,7 +7,7 @@ var _ = require("underscore");
 
 squel.cls.DefaultQueryBuilderOptions.replaceSingleQuotes = true;
 
-squel.cls.InsertFieldValueBlock.prototype.values_only = function(){
+squel.cls.InsertFieldValueBlock.prototype.values_only_ = function(){
   this.values_only = true;
 }
 
@@ -28,6 +28,6 @@ squel.values = function(options) {
 	return squel.select(options,
 	  	[
           new cls.InsertFieldValueBlock(_extend({}, options, {allowNested:true}))
-    	]).values_only();
+    	]).values_only_();
 };
 module.exports = squel;
