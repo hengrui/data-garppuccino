@@ -121,7 +121,7 @@ function crawler_by_name(input_name){
 							else if (data.message == undefined){
 								console.log('Receive artist id ='+data.id+', '+ (item + 1) +'/'+artist_number);
 								var JSONdata = JSON.stringify(data);
-								var output = JSONdata + '.\n';
+								var output = JSONdata + ',\n';
 								fs.appendFileSync('../jsonData/myData_artist.json', output);
 							}
 						});
