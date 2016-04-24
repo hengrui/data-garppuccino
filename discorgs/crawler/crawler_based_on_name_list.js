@@ -2,10 +2,6 @@ var Discogs = require('disconnect').Client;
 var db = new Discogs({userToken: 'UTmffTrAysekfTDiZXhTlSshcnkEiXHgmuisWyvv'}).database();
 var input_name = process.argv[2];
 var Set = require('collections/set');
-var artist_set = new Set();
-var artist_array;
-var release_set = new Set();
-var release_array;
 var async = require('async');
 var fs = require('fs');
 
@@ -13,6 +9,10 @@ var total_time_counter = 0;
 var current_name = -1;
 
 function crawler_by_name(input_name){
+	var artist_set = new Set();
+	var artist_array = [];
+	var release_set = new Set();
+	var release_array = [];
 	var params = {
 		type: "release",
 		per_page: "100",
@@ -42,7 +42,7 @@ function crawler_by_name(input_name){
 			});
 		},
 		'search': function(callback){
-			console.log('-------search---------');
+			console.log('-------search on :'+ input_name + '---------');
 			var current_page = 0;
 			var counter = 0;
 			async.whilst(
@@ -71,79 +71,66 @@ function crawler_by_name(input_name){
 				},
 				function (err, counter){
 					console.log('Totally '+counter+' items has been scaned');
-					
-					release_array = release_set.toArray();
 					callback(null, 'search');
 				}
 			);
 		},
 		'release': function(callback){
-			console.log('-------release------');
+			console.log('-------release of '+ input_name +'------');
+			release_array = release_set.toArray();
 			release_number = release_array.length;
 			console.log(release_number + ' releases have been found');
 			var current_release = -1;
-			/*async.whilst(
-				function() { return current_release < release_number;},
+			async.whilst(
+				function() { return current_release + 1 < release_number;},
 				function (callback) {
 					current_release++;
 					setTimeout(function(){
-					*/
-			var timeout = setInterval(function(){
-				current_release++;
-				var item = current_release;
+						var item = current_release;
 						db.release(release_array[item], function(err, data){
 							if (data == undefined){
-							}
-							else if (data.message == undefined){
-								console.log('Receive release id = '+data.id+', '+item+'/'+release_number);
-						/*
-						 * var JSONdata = JSON.stringify(data);
-						 * var output = JSONdata + ',\n';
-						 * fs.appendFileSync('myData_release.json', output);
-						 */
+							} else if (data.message == undefined){
+								console.log('Receive release id = '+data.id+', '+(item+1)+'/'+release_number);
+								var JSONdata = JSON.stringify(data);
+								var output = JSONdata + ',\n';
 								for (var i = 0; i < data.artists.length; i++)
 									artist_set.add(data.artists[i].id);
-						//	callback(null, current_release);
-						//	
+								fs.appendFileSync('../jsonData/myData_release.json', output);
+								callback(null, current_release);
 							}
 						});
-						if (current_release >= release_number){
-							clearInterval(timeout);
-							callback(null, 'release');
-						}
 					}, 321);
-				/*},
+				},
 				function (err, current_release){
-					console.log('Totally '+ current_release + ' releases have been stored');
+					console.log('Totally '+ (current_release + 1) + ' releases have been stored');
 					artist_array = artist_set.toArray();
 					callback(null, 'release');
 				}
-			);*/
+			);
 		},
-		'artist': function(callback){
-			console.log('--------artist--------');
+		'artist': function(_callback){
+			console.log('--------artist: ' + input_name + '--------');
 			artist_number = artist_array.length;
 			console.log(artist_number+' artits have been found');
-			var current_artist = -1;
-			var timeout = setInterval(function(){		
-				current_artist++;
+			var current_artist = 0;
+			var artist_timeout = setInterval(function(){		
 				var item = current_artist;
 						db.artist(artist_array[item], function(err, data){
 							if (data == undefined){
 							}
 							else if (data.message == undefined){
-								console.log('Receive artist id ='+data.id+', '+item+'/'+artist_number);
-							/*
-							 * var JSONdata = JSON.stringify(data);
-							 * var output = JSONdata + '.\n';
-							 * fs.appendFileSync('myData_artist.json', output);
-							 */
+								console.log('Receive artist id ='+data.id+', '+ (item + 1) +'/'+artist_number);
+								var JSONdata = JSON.stringify(data);
+								var output = JSONdata + '.\n';
+								fs.appendFileSync('../jsonData/myData_artist.json', output);
 							}
 						});
-				if (current_artist >= artist_number){
-					clearInterval(timeout);
-					callback(null, current_artist);
-				}
+						current_artist++;
+						if (current_artist >= artist_number){
+							console.log();
+							clearInterval(artist_timeout);
+							_callback(null, current_artist);
+						}
 			}, 321);
 	},
 	function(err, result){
