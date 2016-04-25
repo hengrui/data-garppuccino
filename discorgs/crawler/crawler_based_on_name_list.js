@@ -132,6 +132,7 @@ function crawler_by_name(input_name){
 							_callback(null, current_artist);
 						}
 			}, 321);
+		}
 	},
 	function(err, result){
 		if (err) {
