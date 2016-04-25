@@ -26,10 +26,23 @@ fs.readFile(option[2], 'utf8', function (err, data){
 		var obj = JSON.parse(data);
 		var output = {};
 		output['artist'] = [];
+		
 		for (var i = 0; i < obj.length; i++){
-			output['artist'].push(obj[i]);
+			var row = obj[i];
+			var detail = {};
+			detail['attribute'] = [];
+			for (var myKey in row){
+				var tmp = {
+					"@": {
+						"name": myKey
+					},
+					"value": row[myKey]
+				};
+				detail['attribute'].push(tmp);
+			}
+			output['artist'].push(detail);
 		}
-		var xml_content = js2xmlparser('ArtistSet', output);
+		var xml_content = js2xmlparser('artistSet', output);
 		fs.writeFile(option[3], xml_content, 'utf8', function(err, data){
 			if (err){
 				console.log('Writing fails');
