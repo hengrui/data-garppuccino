@@ -138,7 +138,6 @@ function crawler_by_name(input_name){
 		if (err) {
 			console.log(err);
 		}
-	}
 	});//async
 }//function crawler_by_name();
 
