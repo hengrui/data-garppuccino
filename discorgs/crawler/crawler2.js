@@ -5,7 +5,9 @@ var Discogs = require('disconnect').Client;
 var db = new Discogs({userToken: 'UTmffTrAysekfTDiZXhTlSshcnkEiXHgmuisWyvv'}).database();
 var line_by_line = require('n-readlines');
 var liner = new line_by_line('./namelist.txt');
-
+var searched_liner = new line_by_line('./searched_namelist.txt');
+var Set = require('collections/set');
+var fs = require('fs');
 var params = {
 	type: "release",
 	artist: ""
@@ -13,9 +15,15 @@ var params = {
 
 (function(){
 	//Get names from name list
+	var searched_set = new Set();	
+	while (line = searched_liner.next()){
+		searched_set.add(line.toString('utf8'));
+	}
 	var namelist = [];
 	while (line = liner.next()){
-		namelist.push(line.toString('ascii'));
+		var tmp = line.toString('utf8');
+		if (!searched_set.has(tmp))
+			namelist.push(tmp);
 	}
 	var name_num = namelist.length;
 	var current_name = -1;
@@ -30,12 +38,13 @@ var params = {
 				db.search(namelist[current_name], params, function(err, data){
 					n = data.pagination.items;
 					if (n != 0){
-						waiting_timer = n + 5;
+						waiting_timer = n + 7;
 						crawler.crawler_by_name(namelist[current_name]);
 					} else {
-						waiting_timer = 0.7;
+						waiting_timer = 1;
 						console.log('No search result for ' + namelist[current_name]);
 					}
+					fs.appendFileSync('./searched_namelist.txt', namelist[current_name] + '\n');
 					callback(null, current_name);
 				});
 			}, waiting_timer * 1000);
