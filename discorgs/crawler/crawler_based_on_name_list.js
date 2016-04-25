@@ -111,7 +111,7 @@ function crawler_by_name(input_name){
 		'artist': function(_callback){
 			console.log('--------artist: ' + input_name + '--------');
 			artist_number = artist_array.length;
-			console.log(artist_number+' artits have been found');
+			console.log(artist_number+' artists have been found');
 			var current_artist = 0;
 			var artist_timeout = setInterval(function(){		
 				var item = current_artist;
