@@ -35,23 +35,26 @@ var params = {
 			current_name++;
 			params['artist'] = namelist[current_name];
 			setTimeout(function(){
-				db.search(namelist[current_name], params, function(err, data){
-					n = data.pagination.items;
-					if (n != 0){
-						waiting_timer = n + 7;
-						crawler.crawler_by_name(namelist[current_name]);
-					} else {
-						waiting_timer = 1;
-						console.log('No search result for ' + namelist[current_name]);
-					}
-					fs.appendFileSync('./searched_namelist.txt', namelist[current_name] + '\n');
-					callback(null, current_name);
-				});
+				try{
+					db.search(namelist[current_name], params, function(err, data){
+						n = data.pagination.items;
+						if (n != 0){
+							waiting_timer = n + 7;
+							crawler.crawler_by_name(namelist[current_name]);
+						} else {
+							waiting_timer = 1;
+							console.log('No search result for ' + namelist[current_name]);
+						}
+						fs.appendFileSync('./searched_namelist.txt', namelist[current_name] + '\n');
+						callback(null, current_name);
+					});
+				} catch (err) {
+					console.log(err);
+				}
 			}, waiting_timer * 1000);
 		},
 		function (err, current_name){
 			console.log('------- ' + current_name + ' names have been scaned.');
-		}
-	);
+		});
 })();
 
