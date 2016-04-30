@@ -29,3 +29,9 @@ IDs used for retrieving are iterated so that some of them might fail
 
 ##crawler_to_line.js, readline.js
 Call 'node crawler_to_line.js | node readline.js' to receive data from command line
+
+##./sql/create_table.sql
+run this sql file to build tables
+
+##./sql/psql.js
+node psql.js ../jsonData/myData_release/artist.json discogs_release/artist
