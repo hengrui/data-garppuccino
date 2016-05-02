@@ -106,7 +106,7 @@ var fs = require('fs');
 var squel = require('squel');
 
 var sql = squel.insert().into("discorgs");
-fs.readFile('./myData.json', 'utf8', function (err, data) {
+fs.readFile('../jsonData/myData_artist.json', 'utf8', function (err, data) {
 	if (err) {
 		console.log(err);
 	} else {
