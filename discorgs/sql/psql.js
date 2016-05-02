@@ -1,5 +1,5 @@
 var pg = require('pg');
-var conString = "postgres://jack:bigdata@localhost:5432/EnAsn";
+var conString = process.env.DATABASEURL || "postgres://jack:bigdata@localhost:5432/EnAsn";
 var client = new pg.Client(conString);
 var fs = require('fs');
 var squel = require('../../lastfm/crawler/squel');
@@ -36,10 +36,15 @@ client.connect(function(err) {
 				//console.log(row);
 				for (var myKey in row){
 					//sql.set(myKey, JSON.stringify(row[myKey]));
+					var t;
+					if (typeof(row[myKey]) == 'string')
+						t = row[myKey];
+					else
+						t = JSON.stringify(row[myKey]);
 					if (myKey == 'id'){
-						content[actual_id] = JSON.stringify(row[myKey]);
+						content[actual_id] = t;
 					} else {
-						content[myKey] = JSON.stringify(row[myKey]);
+						content[myKey] = t;
 					}
 				}
 				sql.setFields(content);
