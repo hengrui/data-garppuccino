@@ -12,4 +12,5 @@ test.conf works as its name indicates:
 	-PriceThreshold and TitleThreshold
 		the threshold to controll whether two object should be treated as the same one accroding to their similarities
 	
-
+#Swoosh
+	Swoosh compares the similarity between each pair of the xml entities
