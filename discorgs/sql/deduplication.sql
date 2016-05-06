@@ -21,7 +21,7 @@ SELECT * FROM discogs_temp;
 WITH CTE
 AS
 (
-	SELECT *, ROW_NUMBER() OVER(PARTITION BY aid) AS RN
+	SELECT *, ROW_NUMBER() OVER(PARTITION BY rid) AS RN
 	FROM discogs_artist2
 )
 

@@ -25,7 +25,7 @@ fs.readFile(option[2], 'utf8', function (err, data){
 	} else {
 		var obj = JSON.parse(data);
 		var output = {};
-		output['artist'] = [];		
+		output['record'] = [];		
 		for (var i = 0; i < obj.length; i++){//obj.length; i++){
 			var row = obj[i];
 			var detail = {};
@@ -73,9 +73,9 @@ fs.readFile(option[2], 'utf8', function (err, data){
 				}
 				detail['attribute'].push(tmp);
 			}
-			output['artist'].push(detail);
+			output['record'].push(detail);
 		}
-		var xml_content = js2xmlparser('artistSet', output);
+		var xml_content = js2xmlparser('recordSet', output);
 		//console.log(xml_content);
 		fs.writeFile(option[3], xml_content, 'utf8', function(err, data){
 			if (err){
