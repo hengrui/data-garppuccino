@@ -1,27 +1,93 @@
 -- Here creates the view for the final merged table
 -- Use union to add more tables or else
-DROP MATERIALIZED VIEW total_merged;
-DROP VIEW clustered_view;
+DROP VIEW dedupe.clustered_view;
+--DROP table dedupe.total_merged;
 
-CREATE MATERIALIZED VIEW total_merged
+CREATE table dedupe.total_merged
 AS
-SELECT row_number() OVER() as merged_id, * from 
+SELECT row_number() OVER() as merged_id, * from (
 (
-SELECT
--- Can use * as well, but see for later
-'lastfm'::varchar(128) as source,
-row_to_json(row(artist_name, album_name, track_name)) as source_id, --Source id is for reference back to original information
-LOWER(artist_name) as artist_name,
-LOWER(album_name) as album_name,
-LOWER(track_name) as track_name,
-LOWER(track_duration) as track_duration,
-(artist_tags),
-(track_tags)
-from lastfm_merged
-) as lastfm
-WITH DATA
+	SELECT
+	source,
+	source_id,
+	artist_name,
+	album_name,
+	track_name,
+	track_duration,
+	artist_tags::text,
+	album_tags::text,
+	track_tags::text,
+	artist_urls,
+	album_urls,
+	track_urls,
+	track_disc_number,
+	track_position,
+	artist_images,
+	album_images,
+	track_images,
+	artist_listeners,
+	track_listeners,
+	artist_biography::text,
+	album_year
+	from lastfm_merged2
+)
+UNION ALL
+(
+	SELECT
+	source,
+	source_id,
+	artist_name,
+	album_name,
+	track_name,
+	track_duration,
+	artist_tags::text,
+	album_tags::text,
+	track_tags::text,
+	artist_urls,
+	album_urls,
+	track_urls,
+	track_disc_number,
+	track_position,
+	artist_images,
+	album_images,
+	track_images,
+	artist_listeners,
+	track_listeners,
+	artist_biography::text,
+	album_year
+	from spotify_merged2
+)
+UNION ALL
+(
+	SELECT
+	source,
+	source_id,
+	artist_name,
+	album_name,
+	track_name,
+	track_duration,
+	artist_tags::text,
+	album_tags::text,
+	track_tags::text,
+	artist_urls,
+	album_urls,
+	track_urls,
+	track_disc_number,
+	track_position,
+	artist_images,
+	album_images,
+	track_images,
+	artist_listeners,
+	track_listeners,
+	artist_biography::text,
+	album_year
+	from discogs_merged
+	where track_name != ''
+)
+) as merged
 ;
 
-CREATE INDEX total_id ON total_merged (merged_id);
+DROP INDEX total_merged_id;
+CREATE INDEX total_merged_id ON dedupe.total_merged (merged_id);
 
 -- Union etc etc

@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS  discogs_release (
 );
 
 CREATE TABLE IF NOT EXISTS discogs_artist (
-	aid varchar(20) PRIMARY KEY,
+	rid varchar(20) PRIMARY KEY,
 	profile text,
 	urls text,
 	releases_url varchar(512),
@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS discogs_artist (
 	realname varchar(255),
 	groups text,
 	aliases text,
-	namevariations text
+	namevariations text,
+	members text
 );
 
 CREATE TABLE IF NOT EXISTS discogs_track (

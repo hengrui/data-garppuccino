@@ -1,0 +1,1 @@
+PGPASSWORD=bigdatahkust psql -d bigdata -U user -h 164.132.194.29
