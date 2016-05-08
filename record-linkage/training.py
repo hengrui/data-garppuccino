@@ -48,7 +48,11 @@ con2 = psy.connect(database=db_conf['NAME'],
 
 c = con.cursor(cursor_factory=psy.extras.RealDictCursor)
 
-DATA_SELECT = 'SELECT artist_name, album_name, track_name, track_duration FROM lastfm_merged limit 1000'
+SCHEMA = 'dedupe'
+DATA_SELECT = (
+            'SELECT artist_name, album_name, track_name, track_duration '
+            'FROM {0}.total_sample'.format(SCHEMA)
+        )
 
 print 'importing data ...'
 c.execute(DATA_SELECT)
@@ -56,16 +60,17 @@ data= c.fetchall()
 
 #pre process every column
 def preProcess(column, key):
-    column = unidecode(column)
-    column = re.sub('  +', ' ', column)
-    column = re.sub('\n', ' ', column)
-    column = column.strip().strip('"').strip("'").lower().strip()
+    if isinstance(column, str):
+        column = unidecode(column)
+        column = re.sub('  +', ' ', column)
+        column = re.sub('\n', ' ', column)
+        column = column.strip().strip('"').strip("'").lower().strip()
     if not column :
         column = None
     if (key == 'track_duration'):
         if (column == '0'):
             column = None
-        else:
+        elif (isinstance(column, str)):
             column = int(column)
         #track duration has to be positive or just invalid
     return column
@@ -78,12 +83,7 @@ for row_id, row in enumerate(data):
     data_d[row_id] = dict(clean_row)
 
 
-#Setting of the data set of types etc
-if os.path.exists(settings_file):
-    print 'reading from', settings_file
-    with open(settings_file) as sf :
-        deduper = dedupe.StaticDedupe(sf, num_cores=4)
-else:
+def train():
     fields = [
         {'field' : 'album_name', 'type': 'String'},
         {'field' : 'track_name', 'type': 'String'},
@@ -110,6 +110,17 @@ else:
     with open(settings_file, 'w') as sf :
         deduper.writeSettings(sf)
 
+train()
+
+#Setting of the data set of types etc
+if os.path.exists(settings_file):
+    print 'reading from', settings_file
+    with open(settings_file) as sf :
+        deduper = dedupe.StaticDedupe(sf, num_cores=4)
+else:
+    #train()
+    pass
+
 print 'blocking...'
 
 threshold = deduper.threshold(data_d, recall_weight=2)
@@ -120,4 +131,5 @@ print '# duplicate sets', len(clustered_dupes)
 full_data = []
 for cluster_id, (cluster, score) in enumerate(clustered_dupes):
     for record_id in cluster:
-        print cluster_id, ': record id', data_d[record_id]
+        data_d[cluster_id] = cluster_id
+        #print data_d[record_id]
