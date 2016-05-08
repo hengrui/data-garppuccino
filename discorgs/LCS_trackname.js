@@ -34,7 +34,7 @@ for (var i = 0; i < content_voting.length; i++){
 	var tmp = content_voting[i];
 	var tmp_str;
 	for (key in tmp){
-		if (tmp[key] > key_counter){
+		if (key != 'NULL' && tmp[key] > key_counter){
 			key_counter = tmp[key];
 			tmp_str = key;
 		}
@@ -43,7 +43,10 @@ for (var i = 0; i < content_voting.length; i++){
 	if (key_counter >= threshold){
 		if (flag != 0)
 			result_str += ' ';
-		result_str += tmp_str;
+		if (key_counter == 0)
+			result_str += 'NULL';
+		else 
+			result_str += tmp_str;
 		flag = 1;
 	}
 }
