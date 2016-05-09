@@ -33,9 +33,9 @@ SELECT
 	CAST(artist.raw::json->>'listeners' as INT) as artist_listeners,
 	CAST(track.raw::json->>'listeners' as INT) as track_listeners,
 	artist.raw::json->'bio'->>'summary' as artist_biography,
-	artist.raw::json->>'url' as artist_urls,
+	replace('http://www.last.fm/music/' || (artist_name), ' ', '%20') as artist_urls,
 	album.raw::json->>'url' as album_urls,
-	track.raw::json->>'url' as track_urls,
+	'http://www.last.fm/music/' || (artist_name) || '_/' || (track_name) as track_urls,
 	null::integer as album_year
 from lastfm_album_tracks as api
 LEFT JOIN (
