@@ -116,7 +116,7 @@ def findlinks(t):
 
 def findlink(t):
     l = findlinks(t)
-    return l[len(l) / 2] if (l > 0) else ''
+    return l[len(l) / 2] if (len(l) > 0) else ''
 
 def getArtist(r, idx, name):
     link = r["artist_urls"]
@@ -238,9 +238,13 @@ def upload():
 
 print '--- importing data ---'
 try:
-    load()
+    #load()
+    pass
 except Exception:
     print >> sys.stderr, "not finished"
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print >> sys.stderr, exc_type, fname, exc_tb.tb_lineno
     pass
 print '--- uploading data ---'
 upload()
