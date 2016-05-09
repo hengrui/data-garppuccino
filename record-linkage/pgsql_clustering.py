@@ -251,7 +251,7 @@ def clustering():
     # We now have a sequence of tuples of donor ids that dedupe believes
     # all refer to the same entity. We write this out onto an entity map
     # table
-    c.execute("DROP TABLE IF EXISTS entity_map")
+    c.execute("DROP TABLE IF EXISTS {0}.entity_map".format(SCHEMA))
 
     print 'creating entity_map database'
     c.execute("CREATE TABLE {0}.entity_map "

@@ -1,4 +1,7 @@
-CREATE VIEW clustered_view
+CREATE VIEW dedupe.clustered_view
 AS
-SELECT m.cluster_score, m.canon_id, record.*
-FROM entity_map m INNER JOIN total_merged record USING (merged_id);
+SELECT
+case when m is null then 1 else m.cluster_score end as cluster_score,
+case when m.canon_id is null then record.merged_id else m.canon_id end as canon_id,
+record.*
+FROM dedupe.total_merged record LEFT JOIN dedupe.entity_map m USING (merged_id);
