@@ -99,7 +99,7 @@ def candidates_gen(result_set):
 def LCS_tracknames(tracks):
     content_voting = {}
     l = len(tracks)
-    threshold = l * 0.8
+    threshold = l * 0.3
     for track in tracks:
         for (idx, word) in enumerate(track.split(' ')):
             tmp = content_voting.setdefault(idx, collections.Counter())
@@ -238,7 +238,7 @@ def upload():
 
 print '--- importing data ---'
 try:
-    #load()
+    load()
     pass
 except Exception:
     print >> sys.stderr, "not finished"

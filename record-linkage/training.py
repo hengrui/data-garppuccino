@@ -65,6 +65,7 @@ def preProcess(column, key):
         column = re.sub('  +', ' ', column)
         column = re.sub('\n', ' ', column)
         column = column.strip().strip('"').strip("'").lower().strip()
+        column = re.sub(r'\([^)]*\)', '', column).strip()
     if not column :
         column = None
     if (key == 'track_duration'):
@@ -72,7 +73,7 @@ def preProcess(column, key):
             column = None
         elif (isinstance(column, str)):
             column = int(column)
-        #track duration has to be positive or just invalid
+        #track duration has to be positive or just invalid    
     return column
 
 data_d = {}
@@ -85,10 +86,12 @@ for row_id, row in enumerate(data):
 
 def train():
     fields = [
-        {'field' : 'album_name', 'type': 'String'},
-        {'field' : 'track_name', 'type': 'String'},
-        {'field' : 'artist_name', 'type': 'String'},
+        {'field' : 'album_name', 'variable name': 'album', 'type': 'String'},
+        {'field' : 'track_name', 'variable name': 'track', 'type': 'String'},
+        {'field' : 'artist_name', 'variable name': 'artist', 'type': 'String'},
         {'field' : 'track_duration', 'type': 'Price', 'has missing': True},
+        {'type': 'Interaction',
+          'interaction variables': ['artist', 'album']}
         ]
 
     deduper = dedupe.Dedupe(fields)

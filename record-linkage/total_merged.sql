@@ -7,80 +7,17 @@ CREATE table dedupe.total_merged
 AS
 SELECT row_number() OVER() as merged_id, * from (
 (
-	SELECT
-	source,
-	source_id,
-	artist_name,
-	album_name,
-	track_name,
-	track_duration,
-	artist_tags::text,
-	album_tags::text,
-	track_tags::text,
-	artist_urls,
-	album_urls,
-	track_urls,
-	track_disc_number,
-	track_position,
-	artist_images,
-	album_images,
-	track_images,
-	artist_listeners,
-	track_listeners,
-	artist_biography::text,
-	album_year
+	SELECT source, source_id, artist_name, album_name, track_name, track_duration, artist_tags::text, album_tags::text, track_tags::text, artist_urls, album_urls, track_urls, track_disc_number, track_position, artist_images, album_images, track_images, artist_listeners, track_listeners, artist_biography::text, album_year
 	from lastfm_merged2
 )
 UNION ALL
 (
-	SELECT
-	source,
-	source_id,
-	artist_name,
-	album_name,
-	track_name,
-	track_duration,
-	artist_tags::text,
-	album_tags::text,
-	track_tags::text,
-	artist_urls,
-	album_urls,
-	track_urls,
-	track_disc_number,
-	track_position,
-	artist_images,
-	album_images,
-	track_images,
-	artist_listeners,
-	track_listeners,
-	artist_biography::text,
-	album_year
+	SELECT source, source_id, artist_name, album_name, track_name, track_duration, artist_tags::text, album_tags::text, track_tags::text, artist_urls, album_urls, track_urls, track_disc_number, track_position, artist_images, album_images, track_images, artist_listeners, track_listeners, artist_biography::text, album_year
 	from spotify_merged2
 )
 UNION ALL
 (
-	SELECT
-	source,
-	source_id,
-	artist_name,
-	album_name,
-	track_name,
-	track_duration,
-	artist_tags::text,
-	album_tags::text,
-	track_tags::text,
-	artist_urls,
-	album_urls,
-	track_urls,
-	track_disc_number,
-	track_position,
-	artist_images,
-	album_images,
-	track_images,
-	artist_listeners,
-	track_listeners,
-	artist_biography::text,
-	album_year
+	SELECT source, source_id, artist_name, album_name, track_name, track_duration, artist_tags::text, album_tags::text, track_tags::text, artist_urls, album_urls, track_urls, track_disc_number, track_position, artist_images, album_images, track_images, artist_listeners, track_listeners, artist_biography::text, album_year
 	from discogs_merged
 	where track_name != ''
 )

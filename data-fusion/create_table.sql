@@ -1,7 +1,4 @@
-DROP TABLE dedupe.track_fusioned;
-DROP TABLE dedupe.artist_track;
-
-CREATE TABLE dedupe.track_fusioned(
+CREATE TABLE dedupe2.track_fusioned(
 	canon_id integer,
 	merged_ids text,
 	sources text, --sources in form {spotify: , discogs: , }
@@ -15,7 +12,7 @@ CREATE TABLE dedupe.track_fusioned(
 	release_year integer
 );
 
-CREATE TABLE dedupe.artist_track(
+CREATE TABLE dedupe2.artist_track(
 	canon_id integer,	
 	track_name text,
 	artist_name text,
